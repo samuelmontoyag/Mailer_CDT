@@ -1,23 +1,62 @@
-{% extends "layout.html" %}
-{% block navbar %}
-<div class="linea-top"></div>
-{% endblock %}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Santa Rita | Reponedores</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <!-- Bootstrap 3.3.6 -->
+  <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="/static/css/AdminLTE.min.css">
+  <!-- iCheck -->
+  <link rel="stylesheet" href="/static/plugins/iCheck/square/blue.css">
 
-{% block body %}
+</head>
+<body class="hold-transition login-page">
+<div class="login-box">
+  <div class="login-logo">
+    <a href="#l"><b>Mailing</b> CDT </a>
+  </div>
+  <!-- /.login-logo -->
+  <div class="login-box-body">
+    <p class="login-box-msg">Ingrese sus datos para iniciar session</p>
 
-    <link href="{{ url_for('static', filename='css/signin.css') }}" rel="stylesheet">
-
-    <div class="container">
-      <form class="form-signin" method="post">
-        <h2 class="form-signin-heading">MAILING CDT</h2>
-        <input type="text" class="form-control" name="username" placeholder="Usuario" required autofocus>
+    <form method="post">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="alert alert-{{category}} alert-dismissible">
+              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+              <h5>{{ message }}</h5>
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+      
+      <input type="text" class="form-control" name="username" placeholder="Usuario" required autofocus>
         <input type="password" class="form-control" name="password" placeholder="Contraseña" required>
         <br/><br/>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Entrar</button>
-        {% for message in get_flashed_messages() %}
-            <div class=flash>{{ message }}</div>
-        {% endfor %}
-      </form>
+      <div class="row">
+        <div class="col-xs-12">
+          <button type="submit" class="btn btn-primary btn-block btn-flat">Ingresar</button>
+        </div>
+        <!-- /.col -->
+      </div>
+    </form>
 
-    </div>
-{% endblock %}
+    <!-- <a href="#" class="btn">Olvide mi contraseña</a><br>
+ -->
+  </div>
+  <!-- /.login-box-body -->
+</div>
+<!-- /.login-box -->
+
+<!-- jQuery 2.2.3 -->
+<script src="/static/js/jquery.min.js"></script>
+
+<!-- Bootstrap 3.3.6 -->
+<script src="/static/js/bootstrap.min.js"></script>
+</body>
+</html>
