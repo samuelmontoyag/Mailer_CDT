@@ -1,0 +1,120 @@
+{%extends 'base.html'%}
+
+{% block content_wrapper    %}
+<section class="content">
+  <div class="row">
+    <div class="col-lg-3 col-xs-6">
+      <div class="small-box bg-aqua">
+        <div class="inner">
+          <h3 id="indicador_reponedores"><i class="fa fa-spinner fa-pulse fa-fw"></i></h3>
+          <p>Reponedores activos</p>
+        </div>
+        <div class="icon">
+          <i class="fa fa-user-plus"></i>
+        </div>
+        <a href="{{url_for('users.reponedores')}}" class="small-box-footer">Ver detalles <i class="fa fa-arrow-right"></i></a>
+      </div>
+    </div>
+    <div class="col-lg-3 col-xs-6">
+      <div class="small-box bg-aqua">
+        <div class="inner">
+          <h3 id="indicador_citas_configuradas"><i class="fa fa-spinner fa-pulse fa-fw"></i></h3>
+          <p>Citas configuradas este mes</p>
+        </div>
+        <div class="icon">
+          <i class="fa fa-calendar"></i>
+        </div>
+        <a href="{{url_for('rutas.ver_citas', estado='nueva', annio=2017, mes=05)}}" class="small-box-footer">Ver detalles <i class="fa fa-arrow-right"></i></a>
+      </div>
+    </div>
+    <div class="col-lg-3 col-xs-6">
+      <div class="small-box bg-green">
+        <div class="inner">
+          <h3 id="indicador_citas_visitadas"><i class="fa fa-spinner fa-pulse fa-fw"></i></h3>
+          <p>Citas realizadas</p>
+        </div>
+        <div class="icon">
+          <i class="ion ion-stats-bars"></i>
+        </div>
+        <a href="{{url_for('rutas.ver_citas', estado='finalizada', annio=2017, mes=05)}}" class="small-box-footer">Ver detalles <i class="fa fa-arrow-right"></i></a>
+      </div>
+    </div>
+    <div class="col-lg-3 col-xs-6">
+      <div class="small-box bg-gray">
+        <div class="inner">
+          <h3 id="indicador_citas_postergadas"><i class="fa fa-spinner fa-pulse fa-fw"></i></h3>
+          <p>Citas postergadas</p>
+        </div>
+        <div class="icon">
+          <i class="ion ion-pie-graph"></i>
+        </div>
+        <a href="{{url_for('rutas.ver_citas', estado='postergada', annio=2017, mes=05)}}" class="small-box-footer">Ver detalles <i class="fa fa-arrow-right"></i></a>
+      </div>
+    </div>
+    {% for segmento in segmentos %}
+      {%if segmento.nombre == "Tradicional 1" or segmento.nombre == "Tradicional 2" or segmento.nombre == "Mayorista"%}
+
+    <div class="col-lg-4 col-xs-6">
+      <div class="box box-danger">
+        <div class="box-header with-border">
+          <h3 class="box-title">{{segmento.nombre}}</h3>
+
+          <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+            </button>
+          </div>
+        </div>
+        <div class="box-body chart-responsive">
+          <div class="chart" id="segmento_{{segmento.id}}" style="height: 220px; position: relative;"></div>
+        </div>
+      </div>
+    </div>
+          {% endif %}
+    {% endfor %}
+
+
+
+
+  </div>
+</section>
+{% endblock%}
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="/static/plugins/morris/morris.css">
+{% endblock%}
+{% block extra_js %}
+<script src="/static/plugins/morris/raphaeljs.min.js"></script>
+<script src="/static/plugins/morris/morris.min.js"></script>
+
+<script type="text/javascript">
+  $(function() {
+    $.getJSON( "{{url_for('.get_statistics')}}", function( data ) {
+      $("#indicador_reponedores").text(data['reponedores_activos']);
+      $("#indicador_citas_postergadas").text(data['citas_postergadas']);
+      $("#indicador_citas_visitadas").text(data['citas_visitadas']);
+      $("#indicador_citas_configuradas").text(data['citas']);
+    });
+    {% for segmento in segmentos %}
+      {%if segmento.nombre == "Tradicional 1" or segmento.nombre == "Tradicional 2" or segmento.nombre == "Mayorista"%}
+
+    $.getJSON( "{{url_for('.get_statistics_segmento', segmento_id=segmento.id)}}", function( data ) {
+      
+      var donut = new Morris.Donut({
+        element: 'segmento_{{segmento.id}}',
+        resize: true,
+        colors: ["#3c8dbc", "#00a65a", "#f56954", "#f39c12"],
+        data: [
+          {label: "Citas pendientes", value: data['pendientes']},
+          {label: "Citas realizadas", value: data['realizadas']},
+          {label: "Citas vencidas", value: data['vencidas']},
+          {label: "Citas postergadas", value: data['postergadas']}
+        ],
+        hideHover: 'auto'
+      });
+    });
+      {% endif %}
+    {% endfor %}
+
+
+  });
+</script>
+{% endblock %}

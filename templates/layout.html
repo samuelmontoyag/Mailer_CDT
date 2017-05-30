@@ -1,169 +1,216 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <title>CDT Mailing</title>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Mailing | CDT</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <!-- Bootstrap 3.3.6 -->
+  <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="/static/css/font-awesome.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="/static/css/ionicons.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/static/plugins/SmartNotification/SmartNotification.css">
+  <link rel="stylesheet" href="/static/css/sweetalert.css">
+  {% block extra_css%}{%endblock%}
 
-    <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
-    <link href="{{ url_for('static', filename='css/spacelab_bootstrap.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='css/sticky-footer-navbar.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='css/select2.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='css/select2-bootstrap.css') }}" rel="stylesheet">
-    
-    {% block css_section %}{% endblock %}
-    <style>
-.slide-panel {
-  margin:0;
-  padding: 0;
-  overflow:hidden;
-}
-.menu-slide{
-  color: #fff;
-  background: #33ad48;
-  -webkit-border-bottom-right-radius: 6px;
-  -webkit-border-bottom-left-radius: 6px;
-  -moz-border-radius-bottomright: 6px;
-  -moz-border-radius-bottomleft: 6px;
-  border-bottom-right-radius: 6px;
-  border-bottom-left-radius: 6px;
-  z-index:99999;
-  overflow:hidden;
-  width:340px;
-  position:absolute;
-  right:0;
-  padding:4px 8px;
-}
-.menu-slide span{
-  display:block;
-  float:left;
-  color:#c2e7c8;
-  margin:0 3px;
-}
-.menu-slide a {
-  display:block;
-  color: #c2e7c8;
-  text-decoration: none;
-  z-index:99999;
-  float:left;
-  margin:0 5px;
-  font-family:'share', sans-serif;
-  font-size:14px;
-}
-.menu-slide a:hover {
-  color: #FFF;
-}
-.menu-slide .active {
-  color:#FFF;
-  background: #F00;
-}
-.menu-slide a.btn-slide{
-  background:url("images/arrow-slide-login.gif") right 2px no-repeat;
-  padding-right:16px;
-}
-.menu-slide a.btn-slide:hover{
-  background:url("images/arrow-slide-login.gif") right -20px no-repeat;
-}
-.menu-slide a.btn-slide.active{
-  background:url("images/arrow-slide-login.gif") right -42px no-repeat;
-}    
-    </style>
-  </head>
+  <link rel="stylesheet" href="/static/css/AdminLTE.min.css">
+  <link rel="stylesheet" href="/static/css/skins/_all-skins.min.css">
 
-  <body>
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<!-- Site wrapper -->
+<div class="wrapper">
 
-    <!-- Wrap all page content here -->
-    <div id="wrap">
+  <header class="main-header">
+    <!-- Logo -->
+    <a href="/" class="logo">
+      <!-- mini logo for sidebar mini 50x50 pixels -->
+      <span class="logo-mini"><b>CDT</b></span>
+      <!-- logo for regular state and mobile devices -->
+      <span class="logo-lg"><b>Mailing</b> <small>CDT</small></span>
+    </a>
+    <!-- Header Navbar: style can be found in header.less -->
+    <nav class="navbar navbar-static-top">
+      <!-- Sidebar toggle button-->
+      <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
 
-<!--         <p class="slide-panel">
-          <div class="menu-slide">
-            <a href="/">Home</a>
-            <span>|</span>
-            <a href="http://www.synaptic.cl/wiki">Wiki</a>
-          </div>
-        </p>
- -->
-      <!-- Fixed navbar -->
-      {% block navbar %}{% endblock %}
-      <!-- begin sidebar -->
-      <div class="sidebarWrap">
-        {% block sidebar %}{% endblock %}  
-      </div>
-      <!-- end sidebar -->
-      <!-- Begin page content -->
-      <div class="container">
-      {% block body %}{% endblock %}
-      </div>
-    </div>
+      <div class="navbar-custom-menu">
+        <ul class="nav navbar-nav">
+          <li class="dropdown user user-menu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <img src="/static/img/user2-160x160.jpg" class="user-image" alt="User Image">
+              <span class="hidden-xs"><!-- {{current_user.doc.usuario}} --></span>
+            </a>
+            <ul class="dropdown-menu">
+              <!-- User image -->
+              <li class="user-header">
+                <img src="/static/img/user2-160x160.jpg" class="img-circle" alt="User Image">
 
-    {% block footer %}
-    <div id="footer">
-      <div class="container">
-         <p><img src="{{ url_for('static', filename='img/logo-footer-iso.gif') }}" alt="Synaptic" title="Synaptic - Soluciones Inform&aacute;ticas" /></p>
-          <p id="copyright" class="text-muted credit">
-            Synaptic Ltda. | Av. Mariano S&aacute;nchez Fontecilla #368, Las Condes, Santiago de Chile. F: +56 (2) 928 9740
-          </p>
-          <p>
-            &copy; 2003 - 2014, Todos los derechos reservados. | <a href="#">T&eacute;rminos y Condiciones de Uso</a>
-          </p>          
-      </div>
-    </div>
-    {% endblock %}
-
-    <script src="{{ url_for('static', filename='js/jquery.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/holder.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/d3.v3.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/nv.d3.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/select2.min.js') }}"></script>
-    select2.min.js
-    
-    <div class="flash">
-      <script>
-      $(function(){
-        {% for message in get_flashed_messages(category_filter=["error"]) %}
-          $.msgbox( "{{ message }}", {type: "error"});
-        {% endfor %}
-        {% for message in get_flashed_messages(category_filter=["success"]) %}
-          $.msgGrowl({'title': " ", 'type': 'success', 'text': "{{ message }}"});
-        {% endfor %}        
-      });
-      </script>
-    </div>
-
-    <div class="modal fade" id="pleaseWaitDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-keyboard="false">
-      <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title" id="myModalLabel">Cargando...</h4>
-            </div>
-            <div class="modal-body">
-              <div class="modal-body">
-                <div class="progress progress-striped active">
-                  <div class="bar" style="width: 100%;"></div>
+                <!-- <p>
+                  {{current_user.doc.nombres}} {{current_user.doc.apellidos}}
+                  <small>Registrado en {{current_user.doc.created}}</small>
+                </p> -->
+              </li>
+              <!-- Menu Footer-->
+              <li class="user-footer">
+                <div class="pull-left">
+                  <a href="">Mi perfil</a>
                 </div>
-              </div>
-            </div>
-        </div>
+                <div class="pull-right">
+                  <a href="/logout" class="btn btn-default btn-flat">Cerrar sesion</a>
+                </div>
+              </li>
+            </ul>
+          </li>
+        </ul>
       </div>
+    </nav>
+  </header>
+
+  <aside class="main-sidebar">
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+      <ul class="sidebar-menu">
+        <li>
+          <a href="/">
+            <i class="fa fa-dashboard"></i> <span>Inicio</span>
+          </a>
+        </li>
+        
+        <li>
+          <a href="">
+            <i class="fa fa-shopping-cart"></i> <span>Mailing</span>
+          </a>
+        </li>
+        
+        <li>
+          <a href="">
+            <i class="fa-envelope-o"></i> <span>Correos</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="">
+            <i class="fa fa fa-lg fa-fw fa-calendar"></i> <span>Eventos</span>
+          </a>
+        </li>
+        <li>
+          <a href="">
+            <i class="fa fa-user"></i> <span>Plantillas</span>
+          </a>
+        </li>
+        <li>
+          <a href=""><i class="fa fa-lg fa-fw fa-street-view"></i> <span>Usuarios</span></a>
+        </li>
+      </ul>
+    </section>
+  </aside>
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+  {% block content_wrapper %}
+   
+    <!-- Main content -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <!-- <strong>Title</strong> --> {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    <section class="content">
+    {%block content%}
+
+      <!-- Default box -->
+      <div class="box">
+        <div class="box-header with-border">
+          <h3 class="box-title">Title</h3>
+
+          <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse">
+              <i class="fa fa-minus"></i></button>
+            <button type="button" class="btn btn-box-tool" data-widget="remove" data-toggle="tooltip" title="Remove">
+              <i class="fa fa-times"></i></button>
+          </div>
+        </div>
+        <div class="box-body">
+          Start creating your amazing application!
+        </div>
+        <!-- /.box-body -->
+        <div class="box-footer">
+          Footer
+        </div>
+        <!-- /.box-footer-->
+      </div>
+      <!-- /.box -->
+
+    {%endblock%}
+    </section>
+    <!-- /.content -->
+    {%endblock%}
+  </div>
+  <!-- /.content-wrapper -->
+
+  <footer class="main-footer">
+    <div class="pull-right hidden-xs">
+      <b>Version</b> 2.0
     </div>
-    {% block extra_scripts %}{% endblock %}
-    <script type="text/javascript">
-      $(function(){
-        $('select').select2();
-        $('body').hide().fadeIn(500);
-        window.onbeforeunload = function(e) {
-          $('#pleaseWaitDialog').modal();
-          $('.container, .sidebarWrap').fadeOut(300);
-        };
-      })
-    </script>
-  </body>
+    <strong>Copyright &copy; 2017 <a href="http://nice.cl">Nice Desarrollo</a>.</strong> Todos los derechos
+    reservados.
+  </footer>
+
+  <!-- Add the sidebar's background. This div must be placed
+       immediately after the control sidebar -->
+  <div class="control-sidebar-bg"></div>
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery 2.2.3 -->
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script src="/static/plugins/SmartNotification/SmartNotification.min.js"></script>
+<script src="/static/js/sweetalert-dev.js"></script>
+  
+<!-- AdminLTE App -->
+<script src="/static/js/app.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() {
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          {%if category =="error"%}
+            $.smallBox({
+                title: "Se ha producido un error",
+                content : "{{message}}",
+                color : "#C46A69",
+                timeout: 10000,
+                iconSmall : "fa fa-warning shake animated"
+              });
+          {%else%}
+            $.smallBox({
+                content : "{{message}}",
+                color : "#296191",
+                timeout: 10000,
+                icon : "fa fa-bell fa-small swing animated"
+              });
+          {%endif%}
+        {% endfor %}
+      {% endif %}
+  {% endwith %}
+  });
+</script>
+{% block extra_js%}{%endblock%}
+</body>
 </html>
-
-
-
-
