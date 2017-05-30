@@ -1,0 +1,271 @@
+{% extends "index.html" %}
+{% block body %}
+
+{% if campaign is defined %}
+    <h3>Detalles mailing</h3>
+    <h3>{{campaign.title}}</h3>
+    <table  class="table table-bordered">
+        <tr>
+            <td>Estado:</td><td colspan="3">{{campaign.status}}</td>
+        </tr>
+        <tr>
+            <td>De:</td><td colspan="3">{{campaign.from_name}} &lt;{{campaign.from_email}}&gt;</td>
+        </tr>
+        {% if campaign.list_id != None %}
+        <tr>
+            <td>Para la lista:</td>
+            <td colspan="3">
+                {% if current_list %}
+                    {{current_list.name}} ({{current_list.stats.member_count}} cuentas de correo)
+                {% else %}
+                    No ha seleccionado Lista de correo
+                {% endif %}
+            </td>
+        </tr>
+        {% endif %}
+        <tr>
+            <td>Asunto:</td><td colspan="3">{{campaign.subject}}</td>
+        </tr>
+        <tr>
+            <td>Fecha creacion:</td><td>{{campaign.create_time}}</td>
+            <td>Fecha de envio:</td>
+            <td>{% if campaign.send_time == None %}
+                    Todavia no se envia
+                {% else %}
+                    {{campaign.send_time}}
+                {% endif %}
+            </td>
+        </tr>
+
+    </table>
+    <a href="{{campaign.archive_url}}" target="_blank" class='btn btn-primary'>Vista previa</a>
+    {% if campaign.send_time == None %}
+        <a href="/campagnas/edit/{{campaign.id}}" class='btn btn-default' >Editar mailing</a>
+    {% else %}
+        <a href="/campagnas/clone/{{campaign.id}}" class='btn btn-default' >Duplicar mailing y editar</a>
+    {% endif %}
+    {% if campaign.send_time == None and campaign.status == "Guardado" %}
+        <button class="btn btn-default btn-lg" data-toggle="modal" data-target="#mailTest">
+            Enviar mailing de prueba
+        </button>
+        <form method="post" action="/campagnas/send" id="sendCampaign" style="display:inline-block;">
+            <input type="hidden" name="id" value="{{campaign.id}}" >
+            <input type="submit" class='btn btn-default' value="Enviar mailing">
+        </form>
+    {% endif %}
+
+
+{% else %}
+    mailing no existe
+{% endif %}
+
+<div class="modal fade" id="mailTest" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <form method="POST" action="/campagnas/sendTest" id="testEmailForm">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">Enviar emails de pruebas</h4>
+          </div>
+          <div class="modal-body">
+            <input type="hidden" name="campaignId" value="{{campaign.id}}" >
+            <div id="extraEmailsContainer">
+                <input type="text" name="email" placeholder="Ingrese un email valido" class="form-control extraEmails">
+            </div>
+            <button type="button" class="btn btn-default" id="addEmailBtn">Agregar</button>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-primary" id="confirmSendTest">Enviar prueba</button>
+          </div>
+      </form>
+    </div>
+  </div>
+</div>
+<br>
+<br><br>
+{% if campaign.send_time != None %}
+<div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+          Estadisticas
+        </a>
+      </h4>
+    </div>
+    <div id="collapseOne" class="panel-collapse collapse">
+        <div class="panel-body">
+            <div style="display:inline-block;">
+                <div class="panel panel-default ">
+                    <div class="panel-heading">E-Mails enviados</div>
+                    <table class="table" style="width:310px;display:inline-block;vertical-align:top">
+                        <tr>
+                            <td>Total enviados:</td><td>{{campaign.emails_sent}}</td>
+                        </tr>
+                        <tr>
+                            <td>N° visualizaciones:</td><td>{{campaign.summary.opens}}</td>
+                        </tr>
+                        <tr>
+                            <td>Vistos por usuario</td><td>{{campaign.summary.unique_opens}}</td>
+                        </tr>
+                        <tr>
+                            <td>No vistos:</td><td>{{campaign.emails_sent - campaign.summary.opens}}</td>
+                        </tr>
+                        <tr>
+                            <td>Ultima vez visto:</td><td>{{campaign.summary.last_open }}</td>
+                        </tr>
+                    </table>
+                    <div style="display:inline-block">
+                        <svg id="emailsEnviados" ></svg>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">De los emails vistos</div>
+                    <table class="table" style="width:310px;display:inline-block;;vertical-align:top">
+                        <tr>
+                            <td>Reenviados:</td><td>{{campaign.summary.forwards}}</td>
+                        </tr>
+                        <tr>
+                            <td>Emails reabiertos:</td><td>{{campaign.summary.opens - campaign.summary.unique_opens}}</td>
+                        </tr>
+                        <tr>
+                            <td>Suscripción cancelada:</td><td>{{campaign.summary.unsubscribes}}</td>
+                        </tr>
+                        <tr>
+                            <td>Clicks unicos:</td><td>{{campaign.summary.unique_clicks}}</td>
+                        </tr>
+                        <tr>
+                            <td>Total de clicks:</td><td>{{campaign.summary.clicks}}</td>
+                        </tr>
+                    </table>
+                    <div style="display:inline-block">
+                        <svg id="emailsAbiertos"></svg>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">No entregados (rebotes)</div>
+                    <table class="table" style="width:310px;display:inline-block;;vertical-align:top">
+                        <tr>
+                            <td>No entregado (temporalmente):</td><td>{{campaign.summary.soft_bounces}}</td>
+                        </tr>    
+                            <td>Imposible entregar:</td><td>{{campaign.summary.hard_bounces}}</td>
+                        </tr>
+                        <tr>
+                            <td>Total no entregados:</td><td>{{campaign.summary.soft_bounces + campaign.summary.hard_bounces}}</td>
+                        </tr>
+                    </table>
+                    <div style="display:inline-block">
+                        <svg id="emailRebotes"></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/pie.js') }}"></script>
+<script type="text/javascript">
+    $(function(){
+        $("#sendCampaign").on("submit", function(){
+            return confirm("¿Esta seguro que desea enviar este mailing a {{current_list.name}}?");
+        })
+        $("#confirmDelete").on("click", function () {
+            $("#confirmSendTest").text("Enviando ...");
+            $("#confirmSendTest").attr("disabled", "disabled");
+            $("#testEmailForm").submit()
+        });
+        $("#testEmailForm").on('submit', function(){
+            var no_error = true;
+            var rexg = /^([\da-z_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/;
+            $("#testEmailForm .extraEmails").each(function(key, value){
+                var email = $(value).val();
+                if (!rexg.test(email)){
+                    no_error = false;
+                    $(value).css("borderColor", "#D11");
+                }else{
+                    $(value).css("borderColor", "#1d1");
+                }
+            })
+            if (!no_error)
+                alert("Se han encontrado errores con algunos de los emails proporcionados");
+            return no_error;
+        })
+        $("#addEmailBtn").on("click", function(){
+            var btn = $('<div class="input-group"><input type="text" name="email" placeholder="Ingrese un email valido" class="extraEmails form-control"><span class="input-group-btn"><button type="button" class="btn" onclick="this.parentElement.parentElement.remove()">X</button></span></div>');
+            $("#extraEmailsContainer").append(btn);
+        })
+    })
+</script>
+{% if campaign.send_time != None %}
+<script type="text/javascript">
+var graphicsDataEnviados = [{key: "Emails vistos",
+                y: {{campaign.summary.unique_opens}}
+                },{
+                    key: "No entregados",
+                    y: {{campaign.summary.soft_bounces + campaign.summary.hard_bounces}}
+                },{
+                    key:"No Vistos", 
+                    y:{{campaign.emails_sent - (campaign.summary.opens + campaign.summary.soft_bounces + campaign.summary.hard_bounces) }}
+                }]
+var graphicsDataAbiertos = [{
+                key: "Reenviados",
+                y: {{campaign.summary.forwards}}
+                },{
+                    key: "Suscripción cancelada",
+                    y: {{campaign.summary.unsubscribes}}
+                },{
+                    key:"Clicks únicos", 
+                    y:{{campaign.summary.unique_clicks}}
+                },{
+                    key:"Emails Reabiertos",
+                    y:{{campaign.summary.opens - campaign.summary.unique_opens}}
+                }]
+var graphicsDataRebotes = [{key: "No entregados",
+                            y: {{campaign.summary.soft_bounces}}
+                           },{
+                            key: "Imposible entregar",
+                            y: {{campaign.summary.hard_bounces}}
+                           }]
+nv.addGraph(function() {
+    var width = 400,
+        height = 400;
+
+    var chart = nv.models.pieChart()
+        .x(function(d) { return d.key })
+        .y(function(d) { return d.y })
+        .color(d3.scale.category10().range())
+        .width(width)
+        .height(height);
+      d3.select("#emailsEnviados")
+          .datum(graphicsDataEnviados)
+        .transition().duration(1200)
+          .attr('width', width)
+          .attr('height', height)
+          .call(chart);
+
+     d3.select("#emailsAbiertos")
+          .datum(graphicsDataAbiertos)
+        .transition().duration(1200)
+          .attr('width', width)
+          .attr('height', height)
+          .call(chart);
+     d3.select("#emailRebotes")
+          .datum(graphicsDataRebotes)
+        .transition().duration(1200)
+          .attr('width', width)
+          .attr('height', height)
+          .call(chart);
+          
+
+    chart.dispatch.on('stateChange', function(e) { nv.log('New State:', JSON.stringify(e)); });
+
+    return chart;
+});
+</script>
+{% endif %}
+{% endblock %}
+

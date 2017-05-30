@@ -1,0 +1,100 @@
+{% extends "index.html" %}
+{% block body %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }}">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{message}}
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+<h3>Usuarios</h3>
+<table class="table table-striped">
+    <thead>
+        <td>#</td>
+        <td>Usuario</td>
+        <td>Nombre Usuario</td>
+        <td>Rol</td>
+        <td></td>
+    </thead>
+    {% for user in users %}
+      {% if user.user_role.lower() != "root" %}
+        <tr id="user{{user.user_id}}">
+            <td id="user_id">{{user.user_id}}</td>
+            <td id="user_name">{{user.user_name}}</td>
+            <td id="user_login">{{user.user_login}}</td>
+            <td id="user_role">{{user.user_role}}</td>
+            <td>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                      Opciones <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                      {% if current_user.doc.user_role.lower() == "admin" or  current_user.doc.user_role.lower() == "root" %}
+                        <li><a href="/auth/user/new/{{user.user_id}}">Editar</a></li>
+                        <li><a href="#" class="deleteModal" data-toggle="modal" data-id="{{user.user_id}}" data-target="#deleteModal">Eliminar</a></li>
+                      {% endif %}
+                    </ul>
+                </div>
+            </td>
+        </tr>
+      {% endif %}
+    {% endfor %}
+</table>
+{% if current_user.doc.user_role.lower() == "admin" or  current_user.doc.user_role.lower() == "root" %}
+    <a href="/auth/user/new" class="btn btn-primary">Crear Usuario</a>
+{% endif %}
+
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Eliminar Usuario</h4>
+      </div>
+      <div class="modal-body">
+        <table class="table table-hover table-striped able table-bordered">
+          <tr>
+            <td># id</td>
+            <td>Usuario</td>
+            <td>Nombre Usuario</td>
+            <td>Rol</td>
+          </tr>
+          <tr>
+            <td id="id_usuario"></td>
+            <td id="user_name"></td>
+            <td id="user_login"></td>
+            <td id="user_role"></td>
+          </tr>
+        </table>
+        <div class="alert alert-danger">
+          ¿Estas Seguro que deseas borrar este usuario?
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        <form method="POST" id="confirmDeleteForm" action="/auth/user/remove/">
+          <input type="hidden" name="id_usuario" value="0" id="deleteID">
+          <button type="submit" id="confirmDelete" class="btn btn-primary">Eliminar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_scripts %}
+<script type="text/javascript">
+  $(".deleteModal").on("click", function () {
+    var user_id = $(this).data('id');
+    $("#deleteID").val(user_id);
+    tr = $("#user"+user_id)
+    $("#deleteModal td#id_usuario").text(user_id)
+    $("#deleteModal td#user_name").text($(tr).children('td#user_name').text())
+    $("#deleteModal td#user_login").text($(tr).children('td#user_login').text())
+    $("#deleteModal td#user_role").text($(tr).children('td#user_role').text())
+  })
+</script>
+
+{% endblock %}

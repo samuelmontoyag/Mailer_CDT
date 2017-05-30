@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% block title %}Changelog{% endblock %}
+{% block navbar %}
+  {% include 'navbar.html' %}
+{% endblock %}
+
+{% block css_section %}
+  <link href="{{ url_for('static', filename='css/code.css') }}" rel="stylesheet">
+  <style>
+  .repo{height:150px;}
+  .project-menu{font-size: 12px;}
+  .file-navigator{display:inline-block;}
+  </style>
+{% endblock %}
+
+{% block body %}
+<h2>Emails masivos</h2>
+<div class="row">
+  <div class="col-lg-3">
+    <h2>Mailing</h2>
+    <p>Aqui puedes ver el estado de las campañas de email masivos y generar nuevas campañas</p>
+    <p><a class="btn btn-default" href="/campagnas">Ver m&aacute;s &raquo;</a></p>
+  </div>
+  <div class="col-lg-3">
+    <h2>Listas de correos</h2>
+    <p>Aqui puedes agregar nuevos usuarios a las listas de correo. </p>
+    <p><a class="btn btn-default" href="/correos">Ver m&aacute;s &raquo;</a></p>
+ </div>
+  <div class="col-lg-3">
+    <h2>Eventos</h2>
+    <p>Aqui puedes ver los eventos agregados dentro del sitio CDT.</p>
+    <p><a class="btn btn-default" href="/eventos">Ver m&aacute;s &raquo;</a></p>
+  </div>
+  <div class="col-lg-3">
+    <h2>Plantillas</h2>
+    <p>Aqui puedes ver y editar las plantillas de correo</p>
+    <p><a class="btn btn-default" href="/plantillas">Ver m&aacute;s &raquo;</a></p>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,102 @@
+{% extends "index.html" %}
+{% block body %}
+
+<h2>Detalles lista correos</h2>
+<h3>{{ list.name }}</h3>
+<div>
+    <button class="btn btn-primary btn-sm"  data-toggle="modal" data-target="#addEmail">
+      Agregar nuevo correo
+    </button>
+    <button class="btn btn-default btn-sm"  data-toggle="modal" data-target="#importCSV">
+      importar correos desde CSV
+    </button>
+</div>
+{% if message != None %}
+   {{message|safe}}
+{% endif %}
+<table class="table table-bordered">
+    <tr>
+        <th>Nombres</th>
+        <th>Apellidos</th>
+        <th>Email</th>
+        <th>Inscrito desde</th>
+        <th></th>
+    </tr>
+    {% for member in members %}
+    <tr>
+        <td>{{ member.merges['FNAME'] }}</td>
+        <td>{{ member.merges['LNAME'] }}</td>
+        <td id="{{member.euid}}"><a href="#">{{ member.email }}</a></td>
+        <td>{{ member.timestamp }}</td>
+        <td>
+            <div class="btn-group">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                    Opciones <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li>
+                        <a href="#" data-toggle="modal" data-id="{{member.euid}}" data-target="#deleteModal" class="deleteModal">Eliminar</a>
+                    </li>
+                </ul>
+            </div>          
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="POST" id="confirmDeleteForm" action="/correos/delete">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">Eliminar Mail</h4>
+          </div>
+          <div class="modal-body">
+            esta a punto de eliminar el email <strong id="emailDelText"></strong>.
+            <div class="alert alert-danger">
+                ¿Estas Seguro?.
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="delete">Eliminar todos los datos de este usuario.
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="notify"> notificar de la eliminacion al usuario.
+                </label>
+            </div>
+          </div>
+          <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+            <input type="hidden" name="euid" value="0" id="deleteID">
+            <input type="hidden" name="emailDel" value="0" id="emailDel">
+            <input type="hidden" name="listId" value="{{list.id}}" >
+
+            <button type="submit" id="confirmDelete" class="btn btn-primary">Eliminar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script type="text/javascript">
+var euid 
+    $(function(){
+        $(".deleteModal").on("click", function () {
+            euid = $(this).data('id');
+            $("#emailDelText").text($('#'+euid).text());
+            $("#emailDel").val($('#'+euid).text());
+            $('euid').val(euid);
+
+        })
+        $("#confirmDelete").on("click", function () {
+            $("#confirmDelete").text("Eliminando ...");
+            $("#confirmDelete").attr("disabled", "disabled");
+            $("#confirmDeleteForm").submit()
+        });
+    })
+</script>
+{% endblock %}

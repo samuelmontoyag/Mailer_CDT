@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>CDT Mailing</title>
+
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+    <link href="{{ url_for('static', filename='css/spacelab_bootstrap.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/sticky-footer-navbar.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/select2.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/select2-bootstrap.css') }}" rel="stylesheet">
+    
+    {% block css_section %}{% endblock %}
+    <style>
+.slide-panel {
+  margin:0;
+  padding: 0;
+  overflow:hidden;
+}
+.menu-slide{
+  color: #fff;
+  background: #33ad48;
+  -webkit-border-bottom-right-radius: 6px;
+  -webkit-border-bottom-left-radius: 6px;
+  -moz-border-radius-bottomright: 6px;
+  -moz-border-radius-bottomleft: 6px;
+  border-bottom-right-radius: 6px;
+  border-bottom-left-radius: 6px;
+  z-index:99999;
+  overflow:hidden;
+  width:340px;
+  position:absolute;
+  right:0;
+  padding:4px 8px;
+}
+.menu-slide span{
+  display:block;
+  float:left;
+  color:#c2e7c8;
+  margin:0 3px;
+}
+.menu-slide a {
+  display:block;
+  color: #c2e7c8;
+  text-decoration: none;
+  z-index:99999;
+  float:left;
+  margin:0 5px;
+  font-family:'share', sans-serif;
+  font-size:14px;
+}
+.menu-slide a:hover {
+  color: #FFF;
+}
+.menu-slide .active {
+  color:#FFF;
+  background: #F00;
+}
+.menu-slide a.btn-slide{
+  background:url("images/arrow-slide-login.gif") right 2px no-repeat;
+  padding-right:16px;
+}
+.menu-slide a.btn-slide:hover{
+  background:url("images/arrow-slide-login.gif") right -20px no-repeat;
+}
+.menu-slide a.btn-slide.active{
+  background:url("images/arrow-slide-login.gif") right -42px no-repeat;
+}    
+    </style>
+  </head>
+
+  <body>
+
+    <!-- Wrap all page content here -->
+    <div id="wrap">
+
+<!--         <p class="slide-panel">
+          <div class="menu-slide">
+            <a href="/">Home</a>
+            <span>|</span>
+            <a href="http://www.synaptic.cl/wiki">Wiki</a>
+          </div>
+        </p>
+ -->
+      <!-- Fixed navbar -->
+      {% block navbar %}{% endblock %}
+      <!-- begin sidebar -->
+      <div class="sidebarWrap">
+        {% block sidebar %}{% endblock %}  
+      </div>
+      <!-- end sidebar -->
+      <!-- Begin page content -->
+      <div class="container">
+      {% block body %}{% endblock %}
+      </div>
+    </div>
+
+    {% block footer %}
+    <div id="footer">
+      <div class="container">
+         <p><img src="{{ url_for('static', filename='img/logo-footer-iso.gif') }}" alt="Synaptic" title="Synaptic - Soluciones Inform&aacute;ticas" /></p>
+          <p id="copyright" class="text-muted credit">
+            Synaptic Ltda. | Av. Mariano S&aacute;nchez Fontecilla #368, Las Condes, Santiago de Chile. F: +56 (2) 928 9740
+          </p>
+          <p>
+            &copy; 2003 - 2014, Todos los derechos reservados. | <a href="#">T&eacute;rminos y Condiciones de Uso</a>
+          </p>          
+      </div>
+    </div>
+    {% endblock %}
+
+    <script src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/holder.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/d3.v3.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/nv.d3.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/select2.min.js') }}"></script>
+    select2.min.js
+    
+    <div class="flash">
+      <script>
+      $(function(){
+        {% for message in get_flashed_messages(category_filter=["error"]) %}
+          $.msgbox( "{{ message }}", {type: "error"});
+        {% endfor %}
+        {% for message in get_flashed_messages(category_filter=["success"]) %}
+          $.msgGrowl({'title': " ", 'type': 'success', 'text': "{{ message }}"});
+        {% endfor %}        
+      });
+      </script>
+    </div>
+
+    <div class="modal fade" id="pleaseWaitDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-keyboard="false">
+      <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 class="modal-title" id="myModalLabel">Cargando...</h4>
+            </div>
+            <div class="modal-body">
+              <div class="modal-body">
+                <div class="progress progress-striped active">
+                  <div class="bar" style="width: 100%;"></div>
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+    {% block extra_scripts %}{% endblock %}
+    <script type="text/javascript">
+      $(function(){
+        $('select').select2();
+        $('body').hide().fadeIn(500);
+        window.onbeforeunload = function(e) {
+          $('#pleaseWaitDialog').modal();
+          $('.container, .sidebarWrap').fadeOut(300);
+        };
+      })
+    </script>
+  </body>
+</html>
+
+
+
+

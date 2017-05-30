@@ -1,0 +1,293 @@
+{% extends "index.html" %}
+{% block body %}
+
+<h2>Lista de Mailings</h2>
+<a href="/campagnas/create" class='btn btn-default' style="float:right">Crear mailing</a>
+
+{% if current_folder != None and  current_folder|string != '0' %}
+<div class="btn-group">
+  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+          Opciones <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="#" data-toggle="modal" data-target="#deleteAreaModal" class="deleteAreaModal">Eliminar Área</a>
+    </li>
+  </ul>
+</div>
+{% endif %}
+
+{% if qty == 0 %}
+<h3 style="min-height:500px;">No hay mailings registrados</h3>
+{% else %}
+{% if message != None %}
+  {{message|safe}}
+{% endif %}
+<table class="table table-hover table-striped able table-bordered">
+  <tr>
+    <th>Nombre</th>
+    <th style="display:None">fecha creacion</th>
+    <th>Email salida</th>
+    <th style="display:None">Asunto salida</th>
+    <th>Ultimo envio</th>
+    <th>Emails enviados</th>
+    {% if current_folder == None %}
+    <th>Área</th>
+    {% endif %}
+    <th></th>
+  </tr>
+  {% for campaign in lists %}
+  <tr id="c{{campaign.id}}">
+    <td id="name"><a href="/campagnas/detalles/{{campaign.id}}">{{campaign.title}}</a></td>
+    <td id="create" style="display:None">{{campaign.create_time}}</td>
+    <td>{{campaign.from_name}} &lt;{{campaign.from_email}}&gt;</td>
+    <td style="display:None">{{campaign.subject}}</td>
+    <td id="lastSend">{{campaign.send_time}}</td>
+    <td id="emails">{{campaign.emails_sent}}</td>
+    {% if current_folder == None %}
+    <td id="area">
+      {% if campaign.folder_id|string == '0' %}
+        Sin área
+      {% else %}
+        {% for folder in  folders %}
+          {%if folder.folder_id == campaign.folder_id %}
+            {{folder.name}}
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    </td>
+    {% endif %}
+    <td>
+      <div class="btn-group">
+        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+          Opciones <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+          <li><a href="/campagnas/detalles/{{campaign.id}}">Detalles</a></li>
+          {% if campaign.send_time == None %}
+          <li><a href="/campagnas/edit/{{campaign.id}}">Editar</a></li>
+          {% else %}
+          <li><a href="/campagnas/clone/{{campaign.id}}">Clonar</a></li>
+          {% endif %}
+          {% if campaign.send_time == None %}
+          <li><a href="#" data-toggle="modal" data-id="{{campaign.id}}" data-target="#cambiarAreaModal" class="cambiarAreaModal">Mover a otra Área</a></li>
+          {% endif %}
+          <li><a href="#" data-toggle="modal" data-id="{{campaign.id}}" data-target="#deleteModal" class="deleteModal">Eliminar</a></li>
+        </ul>
+      </div>      
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+<ul class="pagination">
+{% if current_folder == None %}
+  {% if page|int > 0 %}
+    <li><a href="/campagnas/page/{{page|int-1}}">&laquo;</a></li>
+  {% endif %}
+  <li><a class="active" href="#">Pagina <b>{{page}}</b></a></li>
+  <li><a href="/campagnas/page/{{page|int+1}}">&raquo;</a></li>
+{% else %}
+  {% if page|int > 0 %}
+    <li><a href="/campagnas/folder/{{current_folder.folder_id}}/page/{{page|int-1}}">&laquo;</a></li>
+  {% endif %}
+  {% for pageNum in range(current_folder.total_pages) %}
+    {% if page|int == pageNum %}
+      <li><a class="active" href="/campagnas/folder/{{current_folder.folder_id}}/page/{{pageNum}}"><b>{{pageNum}}</b></a></li>
+    {% else %}
+      <li><a href="/campagnas/folder/{{current_folder.folder_id}}/page/{{pageNum}}">{{pageNum}}</a></li>
+    {% endif %}
+  {% endfor %}
+
+  {% if page|int  < current_folder.total_pages %}
+    <li><a href="/campagnas/folder/{{current_folder.folder_id}}/page/{{page|int + 1}}">&raquo;</a></li>
+  {% endif %}
+{% endif %}
+</ul>
+
+{% endif %}
+<div class="modal fade" id="deleteAreaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="POST" action="/campagnas/folder/remove/">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title" id="myModalLabel">Eliminar Área</h4>
+        </div>
+        <div class="modal-body">
+          ¿Seguro que desea eliminar esta Área?
+          <input type="hidden" name="id_folder" value="{{current_folder}}">
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-default" >Seguro</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Eliminar Mailing</h4>
+      </div>
+      <div class="modal-body">
+        <table class="table table-hover table-striped able table-bordered">
+      <tr>
+        <th>Nombre</th>
+        <th>fecha creacion</th>
+        <th>Ultimo envio</th>
+        <th>Emails enviados</th>
+      </tr>
+      <tr>
+        <td id="nameAlert"></td>
+        <td id="createAlert"></td>
+        <td id="lastSendAlert"></td>
+        <td id="emailsAlert"></td>
+      </tr>
+    </table>
+        <div class="alert alert-danger">
+          Â¿Estas Seguro?<br />
+          Una vez borrada, no podras recuperar este mailing.</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        <form method="POST" id="confirmDeleteForm" action="/campagnas/delete">
+          <input type="hidden" name="id" value="0" id="deleteID">
+          <button type="submit" id="confirmDelete" class="btn btn-primary">Eliminar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="addFolderModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="POST" action="/campagnas/folder/add/">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title" id="myModalLabel">Agregar Área</h4>
+        </div>
+        <div class="modal-body">
+          <label for="name">Nombre nueva Área</label>
+          <input type="text" name="name" id="name" class="form-control"  maxlength="95">
+          </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-default" >Agregar</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        </div>
+      </form>
+  </div>
+  </div>
+</div>
+
+<div class="modal fade" id="cambiarAreaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <form method="POST" action="/campagnas/folder/setArea">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">cambiar Área</h4>
+          </div>
+          <div class="modal-body">
+            <table class="table table-hover table-striped able table-bordered">
+                <tr>
+                  <th>Nombre</th>
+                </tr>
+                <tr>
+                  <td id="nameAlert"></td>
+                </tr>
+                <tr>
+                  <td id="areaAlert"></td>
+                </tr>
+            </table>
+            <label for="name">Selecione la nueva Área</label>
+            <select name="area"  class="form-control">
+              {% for folder in folders %}
+                <option value="{{folder.folder_id}}">{{folder.name}}</option>l
+              {% endfor %}
+            </select>
+            <input type="hidden" name="id" value="0" id="campainID">
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-default" >Cambiar</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+          </div>
+        </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+
+
+
+
+{% block sidebar %}
+{% if qtyFolders > 0 %}
+    <h3>Áreas</h3>
+    <div>
+        <ul class="sidebar-nav">
+          <li>
+            {% if current_folder == None %}
+              <strong><a href="/campagnas">Todos</a></strong>
+            {% else %}
+              <a href="/campagnas">Todos</a>
+            {% endif %}
+          </li>
+          <li>
+            {% if current_folder.folder_id|string == '0' %}
+              <strong><a href="/campagnas/folder/0">Sin Área</a></strong>
+            {% else %}
+              <a href="/campagnas/folder/0">Sin Área</a>
+            {% endif %}
+          </li>
+    {% for folder in folders %}
+          <li>
+            {% if current_folder.folder_id|string == folder.folder_id|string %}
+              <strong><a href="/campagnas/folder/{{folder.folder_id}}">{{folder.name}}</a></strong> <span>({{folder.cnt}})</span></li>
+            {% else %}
+              <a href="/campagnas/folder/{{folder.folder_id}}">{{folder.name}}</a> <span>({{folder.cnt}})</span></li>
+            {% endif %}
+    {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+
+<a href="#" data-toggle="modal" data-target="#addFolderModal" class='btn btn-primary' >Agregar Área</a>
+{% endblock %}
+
+
+
+
+
+
+{% block extra_scripts %}
+<script type="text/javascript">
+  $(function(){
+    $(".deleteModal").on("click", function () {
+      var campaign_id = $(this).data('id');
+      $("#deleteID").val(campaign_id);
+      tr = $("#c"+campaign_id)
+      $("td#nameAlert").text($(tr).children('td#name').text())
+      $("td#createAlert").text($(tr).children('td#create').text())
+      $("td#lastSendAlert").text($(tr).children('td#lastSend').text())
+      $("td#emailsAlert").text($(tr).children('td#emails').text())
+    })
+    $(".cambiarAreaModal").on("click", function () {
+        var campaign_id = $(this).data('id');
+        $("#campainID").val(campaign_id);
+        tr = $("#c"+campaign_id)
+        $("td#nameAlert").text($(tr).children('td#name').text())
+        $("td#areaAlert").text("Área actual: "+$(tr).children('td#area').text())
+    })
+    $("#confirmDelete").on("click", function () {
+      $("#confirmDelete").text("Eliminando ...");
+      $("#confirmDelete").attr("disabled", "disabled");
+      $("#confirmDeleteForm").submit()
+    });
+  })
+</script>
+{% endblock %}

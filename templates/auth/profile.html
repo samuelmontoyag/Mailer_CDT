@@ -1,0 +1,17 @@
+{% extends "index.html" %}
+{% block body %}
+<h4>Mis datos de usuario</h4>
+<br />
+<table class="table">
+  <tr>
+    <td>Login</td><td>{{current_user.doc.user_login}}</td>
+  </tr>
+  <tr>
+    <td>Usuario</td><td>{{current_user.doc.user_name}}</td>
+  </tr>
+  <tr>
+    <td>Perfil</td><td>{{current_user.doc.user_role}}</td>
+  </tr>
+</table>
+<a href="/auth/change_passwd/" class="btn btn-primary">Cambiar contraseña</a>
+{% endblock %}

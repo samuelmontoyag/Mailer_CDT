@@ -1,0 +1,22 @@
+{% extends 'index.html' %}
+{% block body %}
+<h2>Lista de correo</h2>
+{% if message != None %}
+    {{message|safe}}
+{% endif %}
+<table class="table table-bordered">
+    <tr>
+        <th>Nombre</th>
+        <th>Cantidad de emails</th>
+        <th>Fecha creacion</th>
+    </tr>
+    {% for list in lists %}
+    <tr>
+        <td><a href="/correos/details/{{list.id}}">{{list.name}}</a></td>
+        <td>{{list.stats.member_count}}</td>
+        <td>{{list.date_created}}</td>
+    </tr>
+    {% endfor %}
+
+</table>
+{% endblock %}

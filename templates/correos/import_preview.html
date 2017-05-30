@@ -1,0 +1,71 @@
+{% extends "index.html" %}
+{% block body %}
+<form method="POST" action="/correos/import" id="importForm">
+	
+	<h3>{{list_name}}</h3>
+	<h3>Listos para importar <strong id="totalLines">{{totalLines}}</strong> correos</h3>
+
+	<span>En esta vista previa usted debe seleccionar el valor que contendra cada columna.</span>
+	<div class="checkbox">
+		<label >¿la primera fila corresponde a encabezados?</label>
+		<input type="checkbox" name="columnTitle" id="columnTitle"  checked>
+	</div>
+	<table class="table table-bordered" id="emailsPreview">
+		<tr>
+			{% set count = 0 %}
+			{% for row in columnNames %}
+				<th>
+					<select name="headerColumn{{count}}" id="column{{count}}"  class="form-control columnIndex">
+						<option value="None"></option>
+						<option value="name">Nombre</option>
+						<option value="lastName">Apellidos</option>
+						<option value="email">Email</option>
+					</select>
+				</th>
+				{% set count = count + 1 %}
+			{% endfor %}
+		</tr>
+		<tr>
+			{% for row in columnNames %}
+				<th>{{row}}</th>
+			{% endfor %}
+		</tr>
+		{% for row in emails %}
+		<tr>
+			{% for column in row%}	
+				<td>{{column}}</td>
+			{% endfor%}
+		</tr>
+		{% endfor %}
+	</table>
+	<input type="hidden" name="id" value="{{list_id}}" >
+	<input type="hidden" name="emailsFile" value="{{emailsFile}}" >
+	<button type="submit" class="btn btn-primary">Importar</button>
+</form>
+{% endblock %}
+{% block extra_scripts %}
+<script>
+	$(function(){
+		$('#columnTitle').change(function() {
+	        if($("#columnTitle").is(":checked"))
+	            $('#totalLines').text(parseInt($('#totalLines').text())-1);
+	       	else
+	        	$('#totalLines').text(parseInt($('#totalLines').text())+1);
+	    });
+	    $("#importForm").submit(function(event){
+	    	valid = false;
+	    	$(".columnIndex option:selected").each(function(i, val){
+	    		if ($(val).val() == "email"){
+	    			valid = true;
+	    			return;
+	    		}
+	    	});
+	    	if (valid)
+	    		return;
+	    	alert("Debe seleccionar al menos un campo de email");
+	    	event.preventDefault();
+	    });
+	})
+</script>
+{% endblock %}
+

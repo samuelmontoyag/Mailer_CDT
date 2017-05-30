@@ -1,0 +1,207 @@
+{% extends "index.html" %}
+{% block body %}
+<h3>Editar Mailing</h3>
+<form method="post" action="/campagnas/create" class="form-horizontal" role="form">
+	{% if campaign.id != None %}
+	<input type="hidden" name="id" value="{{campaign.id}}">
+	{% endif %}
+	<div class="form-group">
+		<label for="event" class="col-sm-2 control-label">Evento a utilizar</label>
+		<div class="col-sm-10">
+			<select name="event_id" id="event_id"  class="form-control">
+				{% for list in eventList %}
+					<option value="{{list.event_id}}">{{list.event_name}}</option>
+				{% endfor%}
+			</select>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="campaignName" class="col-sm-2 control-label">Nombre mailing</label>
+		<div class="col-sm-10">
+			<input type="text" name="campaignName" id="campaignName" maxlength="95" class="form-control" value="{{campaign.title}}">
+		</div>
+	</div>
+    <div class="form-group">
+        <label for="emailList" class="col-sm-2 control-label">Área</label>
+        <div class="col-sm-10">
+            <select name="folder"  class="form-control">
+                <option value="0">Sin área</option>
+                {% for list in areaList %}
+                	{% if list.folder_id == campaign.folder_id %}
+                    	<option value="{{list.folder_id}}" selected>{{list.name}}</option>
+                    {% else %}
+						<option value="{{list.folder_id}}">{{list.name}}</option>
+					{% endif %}
+                {% endfor%}
+            </select>
+        </div>
+    </div>
+	<div class="form-group">
+		<label for="emailList" class="col-sm-2 control-label">Lista a enviar</label>
+		<div class="col-sm-10">
+			<select name="emailList"  class="form-control">
+				{% for list in lists %}
+					{% if list.id == campaign.list_id %}
+						<option value="{{list.id}}" selected>{{list.name}}</option>
+					{% else %}
+						<option value="{{list.id}}">{{list.name}}</option>
+					{% endif %}
+				{% endfor%}
+			</select>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="outgoinEmail" class="col-sm-2 control-label">Email Salida</label>
+		<div class="col-sm-10">
+			<input type="text" name="outgoinEmail" class="form-control" value="{{campaign.from_email}}">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label">Nombre cuenta Salida</label>
+		<div class="col-sm-10">
+			<input type="text" name="outgoinName" placeholder="ej: Noticias, CDT, etc"  class="form-control" value="{{campaign.from_name}}">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label">Asunto</label>
+		<div class="col-sm-10">
+			<input type="text" name="subject" placeholder="ej: Noticias cdt"  class="form-control" value="{{campaign.subject}}" maxlength="145">
+		</div>
+	</div>
+	<div class="form-group">
+		<label >HTML</label>
+		<div >
+			<textarea name="html" rows="20" style="min-height:200px;" id="html">
+				{{html|safe}}
+			</textarea>
+		</div>
+	</div>
+	<div class="form-group">
+		<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+			Insertar Plantilla
+		</button>
+	</div>
+	<div class="panel panel-default">
+	    <div class="panel-heading">
+	      <h4 class="panel-title">
+	        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+	          Etiquetas
+	        </a>
+	      </h4>
+	    </div>
+	    <div id="collapseOne" class="panel-collapse collapse">
+	        <div class="panel-body">
+	        	Para personalizar los correos, puedes añadir dentro de tu código las etiquetas que están abajo..
+	        	<div>
+	        		<table class="table">
+	        			<tr><th>Etiqueta</th><th>Descripción</th>
+	        			</tr>
+	        			<tr>
+							<td>*|EMAIL|*</td><td>Añade el email del destinatario al correo</td>
+						</tr>
+						<tr>
+							<td>*|FNAME|*</td><td>Añade el primer nombre del destinatario al correo</td>
+						</tr>
+						<tr>
+							<td>*|LNAME|*</td><td>Añade el apellido(s) del destinatario al correo</td>
+						</tr>
+						<tr>
+							<td>*|UNSUB|*</td><td>Añade el link para darse de baja de la lista de correo, debe estar para que mailchimp no agregue su footer</td>
+						</tr>
+						<tr>
+							<td>*|REWARDS|*</td><td>Añade un link para mailchimp, debe estar presente para que mailchimp no agregue su footer</td>
+						</tr>
+						<tr>
+							<td>*|FORWARD|*</td><td>Añade un link para enviar el correo a otros amigos</td>
+						</tr>
+						<tr>
+							<td>*|UPDATE_PROFILE|*</td><td>Añade el link para actualizar la información del cliente en la lista de correo</td>
+						</tr>
+						<tr>
+							<td>*|ARCHIVE|*</td><td>Añade el link donde se puede ver el email en la web</td>
+	        			</tr>
+	        			<tr>
+							<td>*|EVENT_NAME|*</td><td>Añade el nombre del evento a la publicación</td>
+	        			</tr>
+	        			<tr>
+							<td>*|EVENT_DATE|*</td><td>Añade la fecha del evento a la publicación</td>
+	        			</tr>
+	        			<tr>
+							<td>*|EVENT_URL|*</td><td>Añade el link al evento de la publicación</td>
+	        			</tr>
+	        		</table>
+	        	</div>
+	    	</div>
+	    </div>
+	</div>
+	<div class="form-group">
+    	<div class="col-sm-offset-2 col-sm-10">
+			<button type="submit" class="btn btn-default">Actualizar</button>
+		</div>
+	</div>
+</form>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Insertar plantilla</h4>
+      </div>
+      <div class="modal-body">
+        <select name="template"  class="form-control" id="templateSelect">
+        	{% for template in template_lists %}
+        		<option value="{{template.id}}">{{template.name}}</option>
+        	{% endfor %}
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary" id="insertTemplate">Insertar</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/ckeditor/4.0.1/ckeditor.js"></script>-->
+<script src="{{ url_for('static', filename='js/ckeditor/ckeditor.js') }}"></script>
+<script>
+	CKEDITOR.replace('html',{
+        "imageBrowser_listUrl": "/files/list/json",
+        
+    	'filebrowserUploadUrl': '/files/upload'
+	});
+</script>
+<script>
+    $(function(){
+        $('#event_id').on('change', function() {
+            var newName = $('#event_id :selected').text().substring(0,95);
+            $('#campaignName').val(newName);
+        });
+        $('#insertTemplate').on('click', function() {
+            var id = $("#templateSelect option:selected").val();
+            $.get("/plantillas/source/"+id, function(data){
+                CKEDITOR.instances['html'].insertHtml(data)
+            });
+        });
+        $('form').on("submit", function(){
+            var no_error = true;
+            if ( $('form [name="campaignName"]').val().length < 1){
+                alert("debe especificar un nombre de campaña");
+                no_error = false;
+            }
+            if ( $('form [name="subject"]').val().length < 1){
+                alert("debe especificar un Asunto");
+                no_error = false;
+            }
+			if ( $('form [name="folder"]').val() == 0){
+                alert("debe seleccionar una área");
+                no_error = false;
+            }
+            return no_error;
+        })
+    })
+</script>
+{% endblock %}

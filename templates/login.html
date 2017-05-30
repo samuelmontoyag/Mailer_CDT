@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% block navbar %}
+<div class="linea-top"></div>
+{% endblock %}
+
+{% block body %}
+
+    <link href="{{ url_for('static', filename='css/signin.css') }}" rel="stylesheet">
+
+    <div class="container">
+      <form class="form-signin" method="post">
+        <h2 class="form-signin-heading">MAILING CDT</h2>
+        <input type="text" class="form-control" name="username" placeholder="Usuario" required autofocus>
+        <input type="password" class="form-control" name="password" placeholder="Contraseña" required>
+        <br/><br/>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Entrar</button>
+        {% for message in get_flashed_messages() %}
+            <div class=flash>{{ message }}</div>
+        {% endfor %}
+      </form>
+
+    </div>
+{% endblock %}

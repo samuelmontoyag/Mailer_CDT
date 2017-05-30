@@ -1,0 +1,85 @@
+{% extends 'index.html' %}
+{% block body %}
+<h2>Crear plantilla</h2>
+<br />
+<form method="post" action="/plantillas/create" class="form-horizontal" role="form">
+	<div class="form-group">
+		<label for="templateName" class="col-sm-2 control-label">Nombre plantilla</label>
+		<div class="col-sm-10">
+			<input type="text" name="templateName" id="templateName" maxlength="100" class="form-control">
+		</div>
+	</div>
+	<div class="form-group">
+		<label >Html</label>
+		<div >
+			<textarea name="html" rows="20" style="min-height:200px;">
+			</textarea>
+		</div>
+	</div>
+	<div class="panel panel-default">
+	    <div class="panel-heading">
+	      <h4 class="panel-title">
+	        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+	          Etiquetas
+	        </a>
+	      </h4>
+	    </div>
+	    <div id="collapseOne" class="panel-collapse collapse">
+	        <div class="panel-body">
+	        	Para personalizar los correos, puedes añadir dentro de tu código las etiquetas que están abajo.
+	        	<div>
+	        		<table class="table">
+	        			<tr><th>Etiqueta</th><th>Descripción</th>
+	        			</tr>
+	        			<tr>
+							<td>*|EMAIL|*</td><td>Añade el email del destinatario al correo</td>
+						</tr>
+						<tr>
+							<td>*|FNAME|*</td><td>Añade el primer nombre del destinatario al correo</td>
+						</tr>
+						<tr>
+							<td>*|LNAME|*</td><td>Añade el apellido(s) del destinatario al correo</td>
+						</tr>
+						<tr>
+							<td>*|UNSUB|*</td><td>Añade el link para darse de baja de la lista de correo, debe estar para que mailchimp no agregue su footer</td>
+						</tr>
+						<tr>
+							<td>*|REWARDS|*</td><td>Añade un link para mailchimp, debe estar presente para que mailchimp no agregue su footer</td>
+						</tr>
+						<tr>
+							<td>*|FORWARD|*</td><td>Añade un link para enviar el correo a otros amigos</td>
+						</tr>
+						<tr>
+							<td>*|UPDATE_PROFILE|*</td><td>Añade el link para actualizar la información del cliente en la lista de correo</td>
+						</tr>
+						<tr>
+							<td>*|ARCHIVE|*</td><td>Añade el link donde se puede ver el email en la web</td>
+	        			</tr>
+	        			<tr>
+							<td>*|EVENT_NAME|*</td><td>Añade el nombre del evento a la publicación</td>
+	        			</tr>
+	        			<tr>
+							<td>*|EVENT_DATE|*</td><td>Añade la fecha del evento a la publicación</td>
+	        			</tr>
+	        			<tr>
+							<td>*|EVENT_URL|*</td><td>Añade el link al evento de la publicación</td>
+	        			</tr>
+	        		</table>
+	        	</div>
+	    	</div>
+	    </div>
+	</div>
+	<div class="form-group">
+    	<div class="col-sm-offset-2 col-sm-10">
+			<button type="submit" class="btn btn-default">Crear</button>
+		</div>
+	</div>
+</form>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="http://cdnjs.cloudflare.com/ajax/libs/ckeditor/4.0.1/ckeditor.js"></script>
+<script>
+	CKEDITOR.replace('html');
+</script>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends "index.html" %}
+{% block body %}
+<form method="post" class="form-horizontal" role="form">
+{% if editando %}
+<h3>Editar Usuario</h3>
+<h4>{{user_name}}</h4>
+<input type="hidden" name="editando">
+{% else %}
+<h3>Nuevo Usuario</h3>
+{% endif %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }}">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{message}}
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Nombre</label>
+        <div class="col-sm-6">
+            <input type="text" name="user_name" placeholder="Nombre completo" class="form-control" value="{{user_name}}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Usuario</label>
+        <div class="col-sm-6">
+            <input type="text" name="user_login" placeholder="Nombre usuario" class="form-control" value="{{user_login}}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Contraseña</label>
+        <div class="col-sm-6">
+            <input type="text" name="user_pass" placeholder="Nueva Contraseña" class="form-control">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="emailList" class="col-sm-2 control-label">Rol</label>
+        <div class="col-sm-6">
+            <select name="user_role"  class="form-control">
+                <option value="editor">Editor</option>
+                <option value="Admin" {% if user_role == "Admin" %}selected{% endif%}>Admin</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+        	{% if editando %}
+	            <button type="submit" class="btn btn-default">Actualizar</button>
+			{% else %}
+	            <button type="submit" class="btn btn-default">Crear</button>
+			{% endif %}
+            <a href="/auth/users" class="btn btn-primary">Volver</a>
+        </div>
+    </div>
+</form>
+{% endblock %}
