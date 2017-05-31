@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Changelog{% endblock %}
+
 
 {% block css_section %}
   <link href="{{ url_for('static', filename='css/code.css') }}" rel="stylesheet">
@@ -10,28 +10,62 @@
   </style>
 {% endblock %}
 
-{% block body %}
-<h2>Emails masivos</h2>
-<div class="row">
-  <div class="col-lg-3">
-    <h2>Mailing</h2>
-    <p>Aqui puedes ver el estado de las campañas de email masivos y generar nuevas campañas</p>
-    <p><a class="btn btn-default" href="/campagnas">Ver m&aacute;s &raquo;</a></p>
+{% block content %}
+
+<section class="content">
+  <div class="row">
+    <div class="col-lg-3 col-xs-6">
+      <div class="small-box bg-aqua" title="Aqui puedes ver el estado de las campañas de email masivos y generar nuevas campañas">
+        <div class="inner">
+          <h3 id="indicador_mailing"><i class="fa fa-spinner fa-pulse fa-fw"></i></h3>
+          <p>Campañas de Mailing</p>
+        </div>
+        <div class="icon">
+          <i class="fa fa-envelope-o"></i>
+        </div>
+        <a href="" class="small-box-footer">Ver detalles <i class="fa fa-arrow-right"></i></a>
+      </div>
+    </div>
+    <div class="col-lg-3 col-xs-6">
+      <div class="small-box bg-aqua" title="Aqui puedes agregar nuevos usuarios a las listas de correo.">
+        <div class="inner">
+          <h3 id="indicador_lista_correos"><i class="fa fa-spinner fa-pulse fa-fw"></i></h3>
+          <p>Listas de Correos</p>
+        </div>
+        <div class="icon">
+          <i class="fa fa fa-th-list"></i>
+        </div>
+        <a href="/correos" class="small-box-footer">Ver detalles <i class="fa fa-arrow-right"></i></a>
+      </div>
+    </div>
+
+    <div class="col-lg-3 col-xs-6">
+      <div class="small-box bg-green" title="Aqui puedes ver los eventos agregados dentro del sitio CDT.">
+        <div class="inner">
+          <h3 id="indicador_eventos"><i class="fa fa-spinner fa-pulse fa-fw"></i></h3>
+          <p>Eventos</p>
+        </div>
+        <div class="icon">
+          <i class="fa fa-fw fa-calendar"></i>
+        </div>
+        <a href="/eventos" class="small-box-footer">Ver detalles <i class="fa fa-arrow-right"></i></a>
+      </div>
+    </div>
+    <div class="col-lg-3 col-xs-6">
+      <div class="small-box bg-orange" title="Aqui puedes ver y editar las plantillas de correo">
+        <div class="inner">
+          <h3 id="indicador_plantillas"><i class="fa fa-spinner fa-pulse fa-fw"></i></h3>
+          <p>Plantillas</p>
+        </div>
+        <div class="icon">
+          <i class="fa fa-file-powerpoint-o"></i>
+        </div>
+        <a href="/plantillas" class="small-box-footer">Ver detalles <i class="fa fa-arrow-right"></i></a>
+      </div>
+    </div>
+
   </div>
-  <div class="col-lg-3">
-    <h2>Listas de correos</h2>
-    <p>Aqui puedes agregar nuevos usuarios a las listas de correo. </p>
-    <p><a class="btn btn-default" href="/correos">Ver m&aacute;s &raquo;</a></p>
- </div>
-  <div class="col-lg-3">
-    <h2>Eventos</h2>
-    <p>Aqui puedes ver los eventos agregados dentro del sitio CDT.</p>
-    <p><a class="btn btn-default" href="/eventos">Ver m&aacute;s &raquo;</a></p>
-  </div>
-  <div class="col-lg-3">
-    <h2>Plantillas</h2>
-    <p>Aqui puedes ver y editar las plantillas de correo</p>
-    <p><a class="btn btn-default" href="/plantillas">Ver m&aacute;s &raquo;</a></p>
-  </div>
-</div>
+</section>
+
+
 {% endblock %}
