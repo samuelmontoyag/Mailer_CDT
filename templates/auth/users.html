@@ -1,5 +1,10 @@
-{% extends "index.html" %}
-{% block body %}
+{% extends 'base.html' %}
+{% import 'form_helper.html' as lib with context %}
+
+
+{%block content%}
+{%call lib.create_box("Lista de Usuarios", "box-primary")%}
+
 {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}
     {% for category, message in messages %}
@@ -10,7 +15,6 @@
     {% endfor %}
   {% endif %}
 {% endwith %}
-<h3>Usuarios</h3>
 <table class="table table-striped">
     <thead>
         <td>#</td>
@@ -83,6 +87,7 @@
     </div>
   </div>
 </div>
+{%endcall%}
 {% endblock %}
 {% block extra_scripts %}
 <script type="text/javascript">
@@ -96,5 +101,7 @@
     $("#deleteModal td#user_role").text($(tr).children('td#user_role').text())
   })
 </script>
+
+
 
 {% endblock %}

@@ -1,12 +1,14 @@
-{% extends "index.html" %}
-{% block body %}
+{% extends "base.html" %}
+{% import 'form_helper.html' as lib with context %}
+
+
+{%block content%}
+{%set texto = "Editar" if editando else "Nuevo"%}
+{%call lib.create_box("%s Usuario" % texto, "box-primary")%}
 <form method="post" class="form-horizontal" role="form">
 {% if editando %}
-<h3>Editar Usuario</h3>
 <h4>{{user_name}}</h4>
 <input type="hidden" name="editando">
-{% else %}
-<h3>Nuevo Usuario</h3>
 {% endif %}
 
 {% with messages = get_flashed_messages(with_categories=true) %}
@@ -58,4 +60,5 @@
         </div>
     </div>
 </form>
+{%endcall%}
 {% endblock %}

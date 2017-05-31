@@ -1,5 +1,10 @@
-{% extends "index.html" %}
-{% block body %}
+{% extends "base.html" %}
+{% import 'form_helper.html' as lib with context %}
+
+
+{%block content%}
+{%call lib.create_box("Cambiar contraseña", "box-primary")%}
+
 {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}
     {% for category, message in messages %}
@@ -12,7 +17,6 @@
 {% endwith %}
 
 <form method="post" class="form-horizontal" id="form">
-  <h3>Cambiar contraseña</h3>
   <h4>{{current_user.doc.user_name}}</h4>
   <br />
     <div class="form-group">
@@ -39,6 +43,7 @@
         </div>
     </div>
 </form>
+{% endcall %}
 {% endblock %}
 {% block extra_scripts %}
 <script type="text/javascript">

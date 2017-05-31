@@ -1,9 +1,14 @@
-{% extends "index.html" %}
-{% block body %}
+{% extends "base.html" %}
+{% import 'form_helper.html' as lib with context %}
 
-<h2>Lista de Mailings</h2>
+
+{%block content%}
+
+{%call lib.create_box("Lista de Mailings", "box-primary")%}
+
+
 <a href="/campagnas/create" class='btn btn-default' style="float:right">Crear mailing</a>
-
+<br>
 {% if current_folder != None and  current_folder|string != '0' %}
 <div class="btn-group">
   <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
@@ -25,7 +30,7 @@
 {% endif %}
 <table class="table table-hover table-striped able table-bordered">
   <tr>
-    <th>Nombre</th>
+    <th align="center">Nombre</th>
     <th style="display:None">fecha creacion</th>
     <th>Email salida</th>
     <th style="display:None">Asunto salida</th>
@@ -219,6 +224,7 @@
     </div>
   </div>
 </div>
+{% endcall %}
 {% endblock %}
 
 

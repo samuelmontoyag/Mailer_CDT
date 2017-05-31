@@ -1,6 +1,9 @@
-{% extends 'index.html' %}
-{% block body %}
-<h2>Lista de plantillas</h2>
+{% extends 'base.html' %}
+{% import 'form_helper.html' as lib with context %}
+{%block content%}
+
+{%call lib.create_box("Lista de plantillas", "box-primary")%}
+
 
 <a href="/plantillas/create" class='btn btn-default' style="float:right">Nueva plantilla</a>
 <a href="/plantillas/deleted" class='btn btn-default' style="float:right">Ver plantillas eliminadas</a>
@@ -33,5 +36,5 @@
     {% endfor %}
 </table>
 
-
+{%endcall%}
 {% endblock %}

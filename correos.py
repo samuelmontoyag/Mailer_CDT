@@ -32,7 +32,7 @@ def initialize_app(app):
 def index(message=None):
     try:
         m = get_mailchimp_api()
-        lists = m.lists.list()
+        lists = m.lists.list(limit=100)
 
     except mailchimp.Error, e:
         return "Ha ocurrido un error al intentar conectar con mailchimp"

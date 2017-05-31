@@ -1,5 +1,7 @@
-{% extends 'index.html' %}
-{% block body %}
+{% extends 'base.html' %}
+{% import 'form_helper.html' as lib with context %}
+{%block content%}
+{%call lib.create_box("Lista de plantillas eliminadas", "box-primary")%}
 <h2>Crear plantilla</h2>
 <br />
 <form method="post" action="/plantillas/create" class="form-horizontal" role="form">
@@ -75,6 +77,7 @@
 		</div>
 	</div>
 </form>
+{% endcall%}
 {% endblock %}
 
 {% block extra_scripts %}

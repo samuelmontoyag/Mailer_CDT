@@ -1,6 +1,9 @@
-{% extends "index.html" %}
-{% block body %}
-<h4>Mis datos de usuario</h4>
+{% extends "base.html" %}
+{% import 'form_helper.html' as lib with context %}
+
+
+{%block content%}
+{%call lib.create_box("Mis datos de usuario", "box-primary")%}
 <br />
 <table class="table">
   <tr>
@@ -14,4 +17,5 @@
   </tr>
 </table>
 <a href="/auth/change_passwd/" class="btn btn-primary">Cambiar contraseña</a>
+{% endcall %}
 {% endblock %}

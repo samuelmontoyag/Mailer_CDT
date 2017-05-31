@@ -1,8 +1,11 @@
-{% extends "index.html" %}
-{% block body %}
+{% extends "base.html" %}
+{% import 'form_helper.html' as lib with context %}
 
+
+{%block content%}
+{%call lib.create_box("Detalle mailing", "box-primary")%}
 {% if campaign is defined %}
-    <h3>Detalles mailing</h3>
+
     <h3>{{campaign.title}}</h3>
     <table  class="table table-bordered">
         <tr>
@@ -45,7 +48,7 @@
         <a href="/campagnas/clone/{{campaign.id}}" class='btn btn-default' >Duplicar mailing y editar</a>
     {% endif %}
     {% if campaign.send_time == None and campaign.status == "Guardado" %}
-        <button class="btn btn-default btn-lg" data-toggle="modal" data-target="#mailTest">
+        <button class="btn btn-info" data-toggle="modal" data-target="#mailTest">
             Enviar mailing de prueba
         </button>
         <form method="post" action="/campagnas/send" id="sendCampaign" style="display:inline-block;">
@@ -164,6 +167,7 @@
 </div>
 {% endif %}
 
+{% endcall %}
 {% endblock %}
 
 {% block extra_scripts %}

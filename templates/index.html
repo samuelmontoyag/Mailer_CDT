@@ -1,8 +1,5 @@
-{% extends "layout.html" %}
+{% extends "base.html" %}
 {% block title %}Changelog{% endblock %}
-{% block navbar %}
-  {% include 'navbar.html' %}
-{% endblock %}
 
 {% block css_section %}
   <link href="{{ url_for('static', filename='css/code.css') }}" rel="stylesheet">

@@ -1,6 +1,9 @@
-{% extends "index.html" %}
-{% block body %}
+{% extends "base.html" %}
+{% import 'form_helper.html' as lib with context %}
 
+
+{%block content%}
+{%call lib.create_box("Lista de plantillas eliminadas", "box-primary")%}
 <h2>Detalles lista correos</h2>
 <h3>{{ list.name }}</h3>
 <div>
@@ -133,6 +136,7 @@
     </div>
   </div>
 </div>
+{% endcall %}
 {% endblock %}
 
 {% block extra_scripts %}

@@ -1,6 +1,10 @@
-{% extends "index.html" %}
-{% block body %}
-<h3>Crear Mailing</h3>
+{% extends "base.html" %}
+{% import 'form_helper.html' as lib with context %}
+
+
+{%block content%}
+{%call lib.create_box("Crear Mailing", "box-primary")%}
+
 <form method="post" action="/campagnas/create" class="form-horizontal" role="form">
     <div class="form-group">
         <label for="event" class="col-sm-2 control-label">Evento a utilizar</label>
@@ -151,6 +155,7 @@
     </div>
   </div>
 </div>
+{% endcall %}
 {% endblock %}
 
 {% block extra_scripts %}
