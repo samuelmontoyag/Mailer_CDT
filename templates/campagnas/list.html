@@ -46,22 +46,21 @@
             <div style="text-align: center;">
               <a href="#" data-toggle="modal" data-target="#addFolderModal" class='btn btn-primary' >Agregar Área</a>
             </div>
-          {% endblock %}
-    {%endcall%}
+        {% endblock %}
+      {%endcall%}
     </div>
     <div class="col-md-9">
       <div class="box box-primary">
         <div class="box-body no-padding">
           {%call lib.create_box("Mailings", "box-primary")%}
-
-
-<a href="/campagnas/create" class='btn btn-default' style="float:right">Crear mailing</a>
-<br>
+            <a href="/campagnas/create" class='btn btn-default' style="float:right">Crear mailing</a>
+            <br>
 {% if current_folder != None and  current_folder|string != '0' %}
 <div class="btn-group">
   <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
           Opciones <span class="caret"></span>
   </button>
+  <br>
   <ul class="dropdown-menu" role="menu">
     <li>
       <a href="#" data-toggle="modal" data-target="#deleteAreaModal" class="deleteAreaModal">Eliminar Área</a>
@@ -236,43 +235,43 @@
   </div>
 </div>
 
-<div class="modal fade" id="cambiarAreaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-        <form method="POST" action="/campagnas/folder/setArea">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="myModalLabel">cambiar Área</h4>
+    <div class="modal fade" id="cambiarAreaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" action="/campagnas/folder/setArea">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">cambiar Área</h4>
+              </div>
+              <div class="modal-body">
+                <table class="table table-hover table-striped able table-bordered">
+                    <tr>
+                      <th>Nombre</th>
+                    </tr>
+                    <tr>
+                      <td id="nameAlert"></td>
+                    </tr>
+                    <tr>
+                      <td id="areaAlert"></td>
+                    </tr>
+                </table>
+                <label for="name">Selecione la nueva Área</label>
+                <select name="area"  class="form-control">
+                  {% for folder in folders %}
+                    <option value="{{folder.folder_id}}">{{folder.name}}</option>l
+                  {% endfor %}
+                </select>
+                <input type="hidden" name="id" value="0" id="campainID">
+              </div>
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-default" >Cambiar</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+              </div>
+            </form>
           </div>
-          <div class="modal-body">
-            <table class="table table-hover table-striped able table-bordered">
-                <tr>
-                  <th>Nombre</th>
-                </tr>
-                <tr>
-                  <td id="nameAlert"></td>
-                </tr>
-                <tr>
-                  <td id="areaAlert"></td>
-                </tr>
-            </table>
-            <label for="name">Selecione la nueva Área</label>
-            <select name="area"  class="form-control">
-              {% for folder in folders %}
-                <option value="{{folder.folder_id}}">{{folder.name}}</option>l
-              {% endfor %}
-            </select>
-            <input type="hidden" name="id" value="0" id="campainID">
-          </div>
-          <div class="modal-footer">
-            <button type="submit" class="btn btn-default" >Cambiar</button>
-            <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-          </div>
-        </form>
     </div>
   </div>
-</div>
-{% endcall %}
+  {% endcall %}
 {% endblock %}
         </div>
       </div>

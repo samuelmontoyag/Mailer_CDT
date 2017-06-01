@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, render_template, session, request, make_response
-from controllers import home, eventos, campagnas, correos, template, files
 from models import init_db
-from libs import auth
 import os
 
 
 def register_blueprints(app):
+    from controllers import home, eventos, campagnas, correos, template, files
+    from libs import auth
     auth.initialize_app(app)
     home.initialize_app(app)
     eventos.initialize_app(app)
