@@ -17,6 +17,7 @@ def init_db(app):
     posts = Table('wp_posts', db.metadata, autoload=True)
     options = Table('wp_options', db.metadata, autoload=True)
     users = Table('mailing_users', db.metadata, autoload=True)
+    app.db = db
 
 # class Events(db.Model):
 #     __tablename__ = 'wp_em_events'
