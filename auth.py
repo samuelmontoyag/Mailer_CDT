@@ -84,7 +84,7 @@ class User(object):
         user = cls.get_by_username(username)
         password_salt = current_app.config["PASSWORD_SALT"]
 
-        if user: #and user.doc.user_pass == crypt.crypt(password, password_salt):
+        if user: # and user.doc.user_pass == crypt.crypt(password, password_salt):
             return user
         return None
 

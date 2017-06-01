@@ -113,7 +113,7 @@
           <a href="/auth/users"><i class="fa fa-lg fa-fw fa-street-view"></i> <span>Usuarios</span></a>
           </li>
           {% endif %}
-        
+        {%block options%} {%endblock%}
       </ul>
     </section>
   </aside>
@@ -134,9 +134,7 @@
       {% endif %}
     {% endwith %}
     <section class="content">
-    {%block content%}
-
-    {%endblock%}
+    {%block content%} {%endblock%}
     </section>
     <!-- /.content -->
     {%endblock%}

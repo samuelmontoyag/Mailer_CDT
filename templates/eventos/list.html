@@ -1,6 +1,11 @@
-{% extends "index.html" %}
+{% extends 'base.html' %}
+{% import 'form_helper.html' as lib with context %}
 
-{% block body %}
+
+{%block content%}
+{%call lib.create_box("Lista de plantillas eliminadas", "box-primary")%}
+
+
 <h2>Eventos</h2>
 
 <a class='btn btn-default' style="float:right" href="http://www.cdt.cl/wp-admin/post-new.php?post_type=event">Crear evento</a>
@@ -20,4 +25,5 @@
 </table>
 
 {{list.event_name}}
+{% endcall%}
 {% endblock %}

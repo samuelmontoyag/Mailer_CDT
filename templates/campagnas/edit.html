@@ -3,8 +3,9 @@
 
 
 {%block content%}
-{%call lib.create_box("Lista de plantillas eliminadas", "box-primary")%}
-<h3>Editar Mailing</h3>
+{%call lib.create_box("Editar Mailing", "box-primary")%}
+
+
 <form method="post" action="/campagnas/create" class="form-horizontal" role="form">
 	{% if campaign.id != None %}
 	<input type="hidden" name="id" value="{{campaign.id}}">
