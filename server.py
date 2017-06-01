@@ -16,7 +16,6 @@ def register_blueprints(app):
     files.initialize_app(app)
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 app.config.from_pyfile('config.ini')
 
