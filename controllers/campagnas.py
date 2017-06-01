@@ -31,32 +31,12 @@ def initialize_app(app):
 @campagnas.route("/campagnas", methods=['GET', 'POST'])
 @login_required
 def index(message=None, folder=None, page=0):
-    campaigns_per_folder = 25
-    try:
-        m = get_mailchimp_api()
-        folderList = m.folders.list("campaign")
-        if folder is None:
-            campaignList = m.campaigns.list(start=page)
-        else:
-            filters = {
-                'folder_id': folder
-            }
-            campaignList = m.campaigns.list(filters, start=page)
-            for folderObject in folderList:
-                if folderObject["folder_id"] == int(folder):
-                    folder = folderObject
-                    break
-            folder["total_pages"] = folder["cnt"] / (campaigns_per_folder-1)
-    except mailchimp.Error, e:
-        return "Ha ocurrido un error al intentar conectar con mailchimp"
-    campaignList = campaignList['data']
-    for campaign in campaignList:
-        set_current_gmt(campaign)
+    
     data = {
-        'qtyFolders': len(folderList),
-        'folders': folderList,
-        'qty': len(campaignList),
-        'lists': campaignList,
+        'qtyFolders': 0,
+        'folders': [],
+        'qty': 1,
+        'lists': [],
         'message': message,
         'current_folder': folder,
         'page': page
@@ -130,8 +110,9 @@ def create():
     except mailchimp.Error, e:
         return "Ha ocurrido un error con mailchimp<br>"+str(e)
     from models import events, posts
-    join = events.join(posts, events.c.post_id == posts.c.ID)
-    event_list = events.select().select_from(join).execute()
+    # join = events.join(posts, events.c.post_id == posts.c.ID)
+    # event_list = events.select().select_from(join).execute()
+    event_list = []
     data = {
         'eventList': event_list,
         'lists': lists['data'],
