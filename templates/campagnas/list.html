@@ -2,16 +2,17 @@
 {% import 'form_helper.html' as lib with context %}
 
 
-{%block content%}
+{%block content_wrapper%}
 <section class="content-header">
   <h1>
-    Lista de Mailings
+    Campañas de mailing
   </h1>
 </section>
-
 <section class="content">
   <div class="row">
-    <div class="col-md-3">      
+    <div class="col-md-3">
+      <a href="/campagnas/create" class="btn btn-lg btn-primary btn-block margin-bottom">Crear mailing</a>
+
       {%call lib.create_box("Áreas", "box-solid") %}
         {% block areas %}
           {% if qtyFolders > 0 %}
@@ -21,7 +22,7 @@
                       {% if current_folder == None %}
                         <strong><a href="/campagnas">Todos</a></strong>
                       {% else %}
-                        <a href="/campagnas">Todosssss</a>
+                        <a href="/campagnas">Todos</a>
                       {% endif %}
                     </li>
                     <li>
@@ -31,14 +32,15 @@
                         <a href="/campagnas/folder/0">Sin Área</a>
                       {% endif %}
                     </li>
-              {% for folder in folders %}
+                    {% for folder in folders %}
                     <li>
                       {% if current_folder.folder_id|string == folder.folder_id|string %}
-                        <strong><a href="/campagnas/folder/{{folder.folder_id}}">{{folder.name}}</a></strong> <span>({{folder.cnt}})</span></li>
+                        <strong><a href="/campagnas/folder/{{folder.folder_id}}">{{folder.name}}</a></strong> <span>({{folder.cnt}})</span>
                       {% else %}
-                        <a href="/campagnas/folder/{{folder.folder_id}}">{{folder.name}}</a> <span>({{folder.cnt}})</span></li>
+                        <a href="/campagnas/folder/{{folder.folder_id}}">{{folder.name}}</a> <span>({{folder.cnt}})</span>
                       {% endif %}
-              {% endfor %}
+                    </li>
+                    {% endfor %}
                   </ul>
               </div>
           {% endif %}
@@ -49,12 +51,11 @@
         {% endblock %}
       {%endcall%}
     </div>
+    
     <div class="col-md-9">
       <div class="box box-primary">
         <div class="box-body no-padding">
           {%call lib.create_box("Mailings", "box-primary")%}
-            <a href="/campagnas/create" class='btn btn-default' style="float:right">Crear mailing</a>
-            <br>
 {% if current_folder != None and  current_folder|string != '0' %}
 <div class="btn-group">
   <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
