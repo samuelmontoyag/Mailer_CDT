@@ -156,9 +156,17 @@
     <li><a href="/campagnas/folder/{{current_folder.folder_id}}/page/{{page|int + 1}}">&raquo;</a></li>
   {% endif %}
 {% endif %}
-</ul>
-
 {% endif %}
+</ul>
+ </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!--  
+********************
+Modals 
+********************-->
 <div class="modal fade" id="deleteAreaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -179,6 +187,7 @@
     </div>
   </div>
 </div>
+
 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -236,53 +245,57 @@
   </div>
 </div>
 
-    <div class="modal fade" id="cambiarAreaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-            <form method="POST" action="/campagnas/folder/setArea">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">cambiar Área</h4>
-              </div>
-              <div class="modal-body">
-                <table class="table table-hover table-striped able table-bordered">
-                    <tr>
-                      <th>Nombre</th>
-                    </tr>
-                    <tr>
-                      <td id="nameAlert"></td>
-                    </tr>
-                    <tr>
-                      <td id="areaAlert"></td>
-                    </tr>
-                </table>
-                <label for="name">Selecione la nueva Área</label>
-                <select name="area"  class="form-control">
-                  {% for folder in folders %}
-                    <option value="{{folder.folder_id}}">{{folder.name}}</option>l
-                  {% endfor %}
-                </select>
-                <input type="hidden" name="id" value="0" id="campainID">
-              </div>
-              <div class="modal-footer">
-                <button type="submit" class="btn btn-default" >Cambiar</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-              </div>
-            </form>
+<div class="modal fade" id="cambiarAreaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <form method="POST" action="/campagnas/folder/setArea">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">cambiar Área</h4>
           </div>
-    </div>
+          <div class="modal-body">
+            <table class="table table-hover table-striped able table-bordered">
+                <tr>
+                  <th>Nombre</th>
+                </tr>
+                <tr>
+                  <td id="nameAlert"></td>
+                </tr>
+                <tr>
+                  <td id="areaAlert"></td>
+                </tr>
+            </table>
+            <label for="name">Selecione la nueva Área</label>
+            <select name="area"  class="form-control">
+              {% for folder in folders %}
+                <option value="{{folder.folder_id}}">{{folder.name}}</option>l
+              {% endfor %}
+            </select>
+            <input type="hidden" name="id" value="0" id="campainID">
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-default" >Cambiar</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+          </div>
+        </form>
+      </div>
   </div>
+</div>
   {% endcall %}
 {% endblock %}
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+       
 
 
 
 {% block extra_scripts %}
+{% raw %}
+<script id="mailing-template" type="text/x-handlebars-template">
+  <tr>
+  </tr>
+</script>
+{% endraw %}
+
+<script src="/static/js/handlebars.js"></script>
 <script type="text/javascript">
   $(function(){
     $(".deleteModal").on("click", function () {
