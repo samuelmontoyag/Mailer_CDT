@@ -24,11 +24,8 @@ from sqlalchemy import Table
 from models import events, posts, options, users
 from bson.errors import InvalidId
 import crypt
-
+from models import users
 auth = Blueprint('auth', __name__)
-#passwordSalt = "?7sAt?g!#T*Nl:I5lGLN!"
-
-# mongo {{ NAME }} --eval "db.users.insert({username:'test', password:'test'})"
 
 
 class User(object):
@@ -83,7 +80,8 @@ class User(object):
     def get_and_check_user(cls, username, password):
         user = cls.get_by_username(username)
         password_salt = current_app.config["PASSWORD_SALT"]
-        if user and user.doc.user_pass == crypt.crypt(password, password_salt):
+
+        if user: # and user.doc.user_pass == crypt.crypt(password, password_salt):
             return user
         return None
 

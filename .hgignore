@@ -1,0 +1,12 @@
+syntax: glob
+
+*.pyc
+*.pyo
+*.pyd
+
+
+# Packages
+*.egg
+*.egg-info
+
+__pycache__
