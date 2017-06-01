@@ -10,3 +10,4 @@ syntax: glob
 *.egg-info
 
 __pycache__
+config.ini
