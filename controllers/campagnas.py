@@ -31,11 +31,8 @@ def initialize_app(app):
 @campagnas.route("/campagnas", methods=['GET', 'POST'])
 @login_required
 def index(message=None, folder=None, page=0):
-    
     data = {
-        'qtyFolders': 0,
-        'folders': [],
-        'qty': 1,
+        'qty': 0,
         'lists': [],
         'message': message,
         'current_folder': folder,
@@ -50,6 +47,10 @@ def ajax_listar_campagnas():
     campaignList = m.campaigns.list()
     return json.dumps(campaignList)
 
+
+@campagnas.route("/campagnas/ajax/folders", methods=['GET', 'POST'])
+def ajax_folder_list():
+    return json.dumps(get_mailchimp_api().folders.list("campaign"))
 
 
 @campagnas.route("/campagnas/page/<page>", methods=['GET', 'POST'])

@@ -15,109 +15,49 @@
 
       {%call lib.create_box("Áreas", "box-solid") %}
         <div>
-            <ul class="sidebar-nav" id=folder_list>
-              <li>
-                {% if current_folder == None %}
-                  <strong><a href="/campagnas">Todos</a></strong>
-                {% else %}
-                  <a href="/campagnas">Todos</a>
-                {% endif %}
-              </li>
-              <li>
-                {% if current_folder.folder_id|string == '0' %}
-                  <strong><a href="/campagnas/folder/0">Sin Área</a></strong>
-                {% else %}
-                  <a href="/campagnas/folder/0">Sin Área</a>
-                {% endif %}
-              </li>
-              {% for folder in folders %}
-              <li>
-                {% if current_folder.folder_id|string == folder.folder_id|string %}
-                  <strong><a href="/campagnas/folder/{{folder.folder_id}}">{{folder.name}}</a></strong> <span>({{folder.cnt}})</span>
-                {% else %}
-                  <a href="/campagnas/folder/{{folder.folder_id}}">{{folder.name}}</a> <span>({{folder.cnt}})</span>
-                {% endif %}
-              </li>
-              {% endfor %}
-            </ul>
+          <ul class="sidebar-nav" id=folder_list>
+            <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
+          </ul>
         </div>
         <a href="#" data-toggle="modal" data-target="#addFolderModal" class='btn btn-primary' >Agregar Área</a>
       {%endcall%}
     </div>
     
     <div class="col-md-9">
-      <div class="box box-primary">
-        <div class="box-body no-padding">
-          {%call lib.create_box("Mailings", "box-primary")%}
-            {% if current_folder != None and  current_folder|string != '0' %}
-            <div class="btn-group">
-              <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                      Opciones <span class="caret"></span>
-              </button>
-              <br>
-              <ul class="dropdown-menu" role="menu">
-                <li>
-                  <a href="#" data-toggle="modal" data-target="#deleteAreaModal" class="deleteAreaModal">Eliminar Área</a>
-                </li>
-              </ul>
-            </div>
-            {% endif %}
-
-            {% if qty == 0 %}
-            <h3 style="min-height:500px;">No hay mailings registrados</h3>
-            {% else %}
-            {% if message != None %}
-              {{message|safe}}
-            {% endif %}
-            <table class="table table-hover table-striped able table-bordered">
-              <tr>
-                <th align="center">Nombre</th>
-                <th style="display:None">fecha creacion</th>
-                <th>Email salida</th>
-                <th style="display:None">Asunto salida</th>
-                <th>Ultimo envio</th>
-                <th>Emails enviados</th>
-                <th>Área</th>
-                <th></th>
-              </tr>
-              <tbody id="mailing_list">
-                <tr>
-                  <td colspan="6">
-                    <div class="jumbotron text-center">
-                      <h2 class="text-aqua"><i class="fa fa-cog fa-spin fa-2x fa-fw" aria-hidden="true"></i> Cargando ...</h2>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-
-        <ul class="pagination">
-        {% if current_folder == None %}
-          {% if page|int > 0 %}
-            <li><a href="/campagnas/page/{{page|int-1}}">&laquo;</a></li>
-          {% endif %}
-          <li><a class="active" href="#">Pagina <b>{{page}}</b></a></li>
-          <li><a href="/campagnas/page/{{page|int+1}}">&raquo;</a></li>
-        {% else %}
-          {% if page|int > 0 %}
-            <li><a href="/campagnas/folder/{{current_folder.folder_id}}/page/{{page|int-1}}">&laquo;</a></li>
-          {% endif %}
-          {% for pageNum in range(current_folder.total_pages) %}
-            {% if page|int == pageNum %}
-              <li><a class="active" href="/campagnas/folder/{{current_folder.folder_id}}/page/{{pageNum}}"><b>{{pageNum}}</b></a></li>
-            {% else %}
-              <li><a href="/campagnas/folder/{{current_folder.folder_id}}/page/{{pageNum}}">{{pageNum}}</a></li>
-            {% endif %}
-          {% endfor %}
-
-          {% if page|int  < current_folder.total_pages %}
-            <li><a href="/campagnas/folder/{{current_folder.folder_id}}/page/{{page|int + 1}}">&raquo;</a></li>
-          {% endif %}
+      {%call lib.create_box("Mailings", "box-primary")%}
+        {% if current_folder != None and  current_folder|string != '0' %}
+          <div class="btn-group">
+            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Opciones <span class="caret"></span></button>
+            <ul class="dropdown-menu" role="menu">
+              <li>
+                <a href="#" data-toggle="modal" data-target="#deleteAreaModal" class="deleteAreaModal">Eliminar Área</a>
+              </li>
+            </ul>
+          </div>
         {% endif %}
-        {% endif %}
-        </ul>
-       </div>
-      </div>
+        
+        <table class="table table-hover table-striped able table-bordered">
+          <tr>
+            <th align="center">Nombre</th>
+            <th style="display:None">fecha creacion</th>
+            <th>Email salida</th>
+            <th style="display:None">Asunto salida</th>
+            <th>Ultimo envio</th>
+            <th>Emails enviados</th>
+            <th>Área</th>
+            <th></th>
+          </tr>
+          <tbody id="mailing_list">
+            <tr>
+              <td colspan="6">
+                <div class="jumbotron text-center">
+                  <h2 class="text-aqua"><i class="fa fa-cog fa-spin fa-2x fa-fw" aria-hidden="true"></i> Cargando ...</h2>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      {% endcall %}
     </div>
   </div>
 </section>
@@ -233,7 +173,6 @@ Modals
       </div>
   </div>
 </div>
-  {% endcall %}
 {% endblock %}
        
 
@@ -284,7 +223,14 @@ Modals
   {{/each}}
 </script>
 <script id="areas-template" type="text/x-handlebars-template">
-  
+  <li>
+    <a href="/campagnas">Todos</a>
+  </li>
+  {{#each this}}
+    <li>
+      <a href="/campagnas/folder/{{folder_id}}">{{name}}</a> <span>({{cnt}})</span>
+    </li>
+  {{/each}}
 </script>
 {% endraw %}
 
@@ -292,16 +238,27 @@ Modals
 <script type="text/javascript">
   $(function(){
     var mailing_template =  Handlebars.compile($("#mailing-template").html());
+    var areas_template =  Handlebars.compile($("#areas-template").html());
+    
+    $.ajax({
+      url: "{{url_for('.ajax_folder_list')}}",
+      dataType: 'json',
+      success: function(data) {
+        console.log(data)
+        var htmlData = areas_template(data)
+        $("#folder_list").html(htmlData);
+      }
+    });
     $.ajax({
       url: "{{url_for('.ajax_listar_campagnas')}}",
       dataType: 'json',
       success: function(data) {
         console.log(data)
-        var htmlData = mailing_template(data)
+        var htmlData = mailing_template(data);
         $("#mailing_list").html(htmlData);
-
       }
     });
+
     $(".deleteModal").on("click", function () {
       var campaign_id = $(this).data('id');
       $("#deleteID").val(campaign_id);
