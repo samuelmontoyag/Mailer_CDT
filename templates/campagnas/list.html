@@ -44,7 +44,7 @@
                   </ul>
               </div>
           {% endif %}
-            <br><br>
+
             <div style="text-align: center;">
               <a href="#" data-toggle="modal" data-target="#addFolderModal" class='btn btn-primary' >Agregar Área</a>
             </div>
@@ -287,7 +287,7 @@ Modals
 
 
 
-{% block extra_scripts %}
+{% block extra_js %}
 {% raw %}
 <script id="mailing-template" type="text/x-handlebars-template">
   <tr>
@@ -298,6 +298,14 @@ Modals
 <script src="/static/js/handlebars.js"></script>
 <script type="text/javascript">
   $(function(){
+    var detalle_template =  Handlebars.compile($("#mailing-template").html());
+    $.ajax({
+      url: "{{url_for('.ajax_listar_campagnas')}}",
+      dataType: 'json',
+      success: function(data) {
+        console.log(data)
+      }
+    });
     $(".deleteModal").on("click", function () {
       var campaign_id = $(this).data('id');
       $("#deleteID").val(campaign_id);

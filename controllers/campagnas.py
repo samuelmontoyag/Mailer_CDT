@@ -19,6 +19,7 @@ from utils import get_mailchimp_api
 from eventos import get_event_data
 from time import timezone
 from datetime import datetime, timedelta
+import json
 
 campagnas = Blueprint('campagnas', __name__)
 
@@ -61,6 +62,14 @@ def index(message=None, folder=None, page=0):
         'page': page
     }
     return render_template('campagnas/list.html', title="NOMBRE", **data)
+
+@campagnas.route("/campagnas/ajax/listar", methods=['GET', 'POST'])
+@login_required
+def ajax_listar_campagnas():
+    m = get_mailchimp_api()
+    campaignList = m.campaigns.list()
+    return json.dumps(campaignList)
+
 
 
 @campagnas.route("/campagnas/page/<page>", methods=['GET', 'POST'])
