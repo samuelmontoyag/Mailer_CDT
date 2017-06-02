@@ -211,8 +211,10 @@
         $('select').select2();
         $('body').hide().fadeIn(500);
         window.onbeforeunload = function(e) {
-          $('#pleaseWaitDialog').modal();
-          $('.container, .sidebarWrap').fadeOut(300);
+          swal('Cargando Datos')
+          swal.showLoading()
+          // $('#pleaseWaitDialog').modal();
+          // $('.container, .sidebarWrap').fadeOut(300);
         };
       })
 </script>

@@ -19,8 +19,11 @@
             <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
           </ul>
         </div>
-        <a href="#" data-toggle="modal" data-target="#addFolderModal" class='btn btn-primary' >Agregar Área</a>
+        <div style="text-align: center;">
+          
+        <a href="#" class='btn btn-primary add_campaign' >Agregar Área</a>
       {%endcall%}
+        </div>
     </div>
     
     <div class="col-md-9">
@@ -122,26 +125,7 @@ Modals
     </div>
   </div>
 </div>
-<div class="modal fade" id="addFolderModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <form method="POST" action="/campagnas/folder/add/">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title" id="myModalLabel">Agregar Área</h4>
-        </div>
-        <div class="modal-body">
-          <label for="name">Nombre nueva Área</label>
-          <input type="text" name="name" id="name" class="form-control"  maxlength="95">
-          </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-default" >Agregar</button>
-          <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-        </div>
-      </form>
-  </div>
-  </div>
-</div>
+
 
 <div class="modal fade" id="cambiarAreaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -244,7 +228,7 @@ Modals
       url: "{{url_for('.ajax_folder_list')}}",
       dataType: 'json',
       success: function(data) {
-        console.log(data)
+        // console.log(data)
         var htmlData = areas_template(data)
         $("#folder_list").html(htmlData);
       }
@@ -253,7 +237,7 @@ Modals
       url: "{{url_for('.ajax_listar_campagnas')}}",
       dataType: 'json',
       success: function(data) {
-        console.log(data)
+        // console.log(data)
         var htmlData = mailing_template(data);
         $("#mailing_list").html(htmlData);
       }
@@ -282,4 +266,69 @@ Modals
     });
   })
 </script>
+<script type="text/javascript">
+   $(".add_campaign").on('click', function(event){
+      event.preventDefault();
+      swal({
+        title: 'Indique el nombre del área',
+        input: 'text',
+        showCancelButton: true,
+        cancelButtonText: 'Atrás',
+        confirmButtonText: 'Crear',
+        allowOutsideClick: false,
+        reverseButtons: true,
+        inputValidator: function (value) {
+          return new Promise(function (resolve, reject) {
+            if (value) {
+              resolve()
+            } else {
+              reject('Debes indicar un nombre de área!')
+            }
+          })
+        }
+      }).then(function (result) {
+        var form = document.createElement("form");
+        form.setAttribute("method", "post");
+        form.setAttribute("action", '/campagnas/folder/add/');
+        var hiddenField = document.createElement("input");
+        hiddenField.setAttribute("type", "hidden");
+        hiddenField.setAttribute("name", 'name');
+        hiddenField.setAttribute("value", result);
+        form.appendChild(hiddenField);
+        document.body.appendChild(form);
+        form.submit();
+        swal({
+          type: 'success',
+          html: 'Lista Creada: ' + result
+        })
+      }).catch(swal.noop);
+    });
+
+
+</script>
 {% endblock %}
+
+
+<!-- swal({
+        title: 'Submit email to run ajax request',
+        input: 'email',
+        showCancelButton: true,
+        confirmButtonText: 'Submit',
+        showLoaderOnConfirm: true,
+        allowOutsideClick: false
+      }).then(function(){
+        swal(
+          'Deleted!',
+          'Your file has been deleted.',
+          'success'
+        )
+      }, function (dismiss) {
+        if (dismiss === 'cancel') {
+          swal(
+          'Cancelled',
+          'Your imaginary file is safe :)',
+          'error'
+          )
+        }
+      })
+    }); -->
