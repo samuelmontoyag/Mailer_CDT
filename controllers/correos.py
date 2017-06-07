@@ -124,37 +124,37 @@ def delete():
 @correos.route('/correos/import_preview', methods=['POST'])
 @login_required
 def import_preview():
-    if request.method == 'POST':
-        list_id = request.form['id']
-        list_name = request.form['list_name']
-        csv_file = request.files['emailsFile']
-        data = csv_file.read()
-        #genera el archivo temporal
-        temp_filename = "file"+str(time())+".csv"
-        temp_file = open("/tmp/"+temp_filename, 'w')
-        temp_file.write(data)
-        temp_file.close()
+    list_id = request.form['id']
+    list_name = request.form['list_name']
+    0/0
+    csv_file = request.files['emailsFile']
+    data = csv_file.read()
+    
+    #genera el archivo temporal
+    temp_filename = "file"+str(time())+".csv"
+    temp_file = open("/tmp/"+temp_filename, 'w')
+    temp_file.write(data)
+    temp_file.close()
 
-        temp_file = open("/tmp/"+temp_filename, 'r')
+    temp_file = open("/tmp/"+temp_filename, 'r')
 
-        reader = csv.reader(temp_file)
-        columnNames = reader.next()
-        lineas_totales = 0
-        emails = []
-        for row in reader:
-            lineas_totales += 1
-            if lineas_totales < 20:
-                emails.append(row)
-
-        temp_file.close()
-        data = {
-            'columnNames': columnNames,
-            'totalLines': lineas_totales,
-            'emails': emails,
-            'list_id': list_id,
-            'list_name': list_name,
-            'emailsFile': temp_filename
-        }
+    reader = csv.reader(temp_file)
+    columnNames = reader.next()
+    lineas_totales = 0
+    emails = []
+    for row in reader:
+        lineas_totales += 1
+        if lineas_totales < 20:
+            emails.append(row)
+    temp_file.close()
+    data = {
+        'columnNames': columnNames,
+        'totalLines': lineas_totales,
+        'emails': emails,
+        'list_id': list_id,
+        'list_name': list_name,
+        'emailsFile': temp_filename
+    }
     return render_template("correos/import_preview.html", **data)
 
 

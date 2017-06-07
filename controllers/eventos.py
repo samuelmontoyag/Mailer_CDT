@@ -27,8 +27,9 @@ def initialize_app(app):
 @login_required
 def index():
     # users = Table('wp_options', db.metadata, autoload=True)
-    join = events.join(posts, events.c.post_id == posts.c.ID)
-    event_list = events.select().select_from(join).execute()
+    # join = events.join(posts, events.c.post_id == posts.c.ID)
+    # event_list = events.select().select_from(join).execute()
+    event_list = []
     data = {
         'list': event_list
     }

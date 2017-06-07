@@ -290,11 +290,11 @@ Modals
         var form = document.createElement("form");
         form.setAttribute("method", "post");
         form.setAttribute("action", '/campagnas/folder/add/');
-        var hiddenField = document.createElement("input");
-        hiddenField.setAttribute("type", "hidden");
-        hiddenField.setAttribute("name", 'name');
-        hiddenField.setAttribute("value", result);
-        form.appendChild(hiddenField);
+        var nombre_campagna = document.createElement("input");
+        nombre_campagna.setAttribute("type", "hidden");
+        nombre_campagna.setAttribute("name", 'name');
+        nombre_campagna.setAttribute("value", result);
+        form.appendChild(nombre_campagna);
         document.body.appendChild(form);
         form.submit();
         swal({
@@ -307,28 +307,3 @@ Modals
 
 </script>
 {% endblock %}
-
-
-<!-- swal({
-        title: 'Submit email to run ajax request',
-        input: 'email',
-        showCancelButton: true,
-        confirmButtonText: 'Submit',
-        showLoaderOnConfirm: true,
-        allowOutsideClick: false
-      }).then(function(){
-        swal(
-          'Deleted!',
-          'Your file has been deleted.',
-          'success'
-        )
-      }, function (dismiss) {
-        if (dismiss === 'cancel') {
-          swal(
-          'Cancelled',
-          'Your imaginary file is safe :)',
-          'error'
-          )
-        }
-      })
-    }); -->

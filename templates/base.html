@@ -16,13 +16,14 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="/static/plugins/SmartNotification/SmartNotification.css">
   <link rel="stylesheet" href="/static/css/sweetalert.css">
+
   {% block extra_css%}{%endblock%}
 
   <link rel="stylesheet" href="/static/css/AdminLTE.min.css">
   <link rel="stylesheet" href="/static/css/skins/_all-skins.min.css">
 
 </head>
-<body class="hold-transition skin-blue-light sidebar-mini">
+<body class="hold-transition skin-purple-light sidebar-mini">
 <!-- Site wrapper -->
 <div class="wrapper">
 
@@ -176,6 +177,7 @@
 <script src="/static/js/bootstrap.min.js"></script>
 <script src="/static/plugins/SmartNotification/SmartNotification.min.js"></script>
 <script src="/static/js/sweetalert-dev.js"></script>
+
 <script src="/static/js/select2.min.js"></script>
   
 <!-- AdminLTE App -->
@@ -206,18 +208,7 @@
   {% endwith %}
   });
 </script>
-<script type="text/javascript">
-      $(function(){
-        $('select').select2();
-        $('body').hide().fadeIn(500);
-        window.onbeforeunload = function(e) {
-          swal('Cargando Datos')
-          swal.showLoading()
-          // $('#pleaseWaitDialog').modal();
-          // $('.container, .sidebarWrap').fadeOut(300);
-        };
-      })
-</script>
+
 {% block extra_js%}{%endblock%}
 </body>
 </html>
