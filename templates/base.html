@@ -179,6 +179,22 @@
 <script src="/static/js/sweetalert-dev.js"></script>
 
 <script src="/static/js/select2.min.js"></script>
+<script src="/static/js/holder.js"></script>
+<script src="/static/js/d3.v3.min.js"></script>
+<script src="/static/js/nv.d3.min.js"></script>
+
+<div class="flash">
+      <script>
+      $(function(){
+        {% for message in get_flashed_messages(category_filter=["error"]) %}
+          $.msgbox( "{{ message }}", {type: "error"});
+        {% endfor %}
+        {% for message in get_flashed_messages(category_filter=["success"]) %}
+          $.msgGrowl({'title': " ", 'type': 'success', 'text': "{{ message }}"});
+        {% endfor %}        
+      });
+      </script>
+</div>
   
 <!-- AdminLTE App -->
 <script src="/static/js/app.min.js"></script>
