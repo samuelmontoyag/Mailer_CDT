@@ -239,9 +239,9 @@ def clone(id):
     except mailchimp.Error, e:
         return index("Ha ocurrido un error con mailchimp"+str(e))
     from models import events, posts
-    join = events.join(posts, events.c.post_id == posts.c.ID)
-    event_list = events.select().select_from(join).execute()
-
+    # join = events.join(posts, events.c.post_id == posts.c.ID)
+    # event_list = events.select().select_from(join).execute()
+    event_list = []
     html = replace_rewards_unsubcribe(content['html'])
     details['data'][0]['id'] = None
     data = {
@@ -320,7 +320,7 @@ def replace_tags(html, data):
 
 
 def replace_rewards_unsubcribe(html):
-    from BeautifulSoup import BeautifulSoup
+    from bs4 import BeautifulSoup
     soup = BeautifulSoup(html)
     url_rewards = 'http://www.mailchimp.com/monkey-rewards'
     url_unsubcribe = '.com/unsubscribe'
