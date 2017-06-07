@@ -163,7 +163,20 @@ Modals
 
 
 {% block extra_js %}
+
+<script src="/static/js/handlebars.js"></script>
 {% raw %}
+
+<script type="text/javascript">  
+  Handlebars.registerHelper('if_eq', function(a, b, opts) {
+    if (a == b) {
+        return opts.fn(this);
+    } else {
+        return opts.inverse(this);
+    }
+  });
+</script>
+
 <script id="mailing-template" type="text/x-handlebars-template">
   {{#each data}}
   <tr id="c{{campaign.id}}">
@@ -186,15 +199,18 @@ Modals
           Opciones <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" role="menu">
-          <li><a href="/campagnas/detalles/{{campaign.id}}">Detalles</a></li>
-          {% if send_time == None %}
+          <li><a href="/campagnas/detalles/{{id}}">Detalles</a></li>
+          {{#if_eq send_time None}}
           <li><a href="/campagnas/edit/{{id}}">Editar</a></li>
-          {% else %}
+          
+          {{else}}
           <li><a href="/campagnas/clone/{{id}}">Clonar</a></li>
-          {% endif %}
-          {% if send_time == None %}
+          {{/if_eq}}
+
+          
+          {{#if_eq send_time None}}
           <li><a href="#" data-toggle="modal" data-id="{{id}}" data-target="#cambiarAreaModal" class="cambiarAreaModal">Mover a otra Área</a></li>
-          {% endif %}
+          {{/if_eq}}
           <li><a href="#" data-toggle="modal" data-id="{{id}}" data-target="#deleteModal" class="deleteModal">Eliminar</a></li>
         </ul>
       </div>      
@@ -218,7 +234,7 @@ Modals
 </script>
 {% endraw %}
 
-<script src="/static/js/handlebars.js"></script>
+
 <script type="text/javascript">
   $(function(){
     var mailing_template =  Handlebars.compile($("#mailing-template").html());
