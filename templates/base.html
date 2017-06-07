@@ -208,7 +208,18 @@
   {% endwith %}
   });
 </script>
-
+<script type="text/javascript">
+      $(function(){
+        $('select').select2();
+        $('body').hide().fadeIn(500);
+        window.onbeforeunload = function(e) {
+          swal('Cargando Datos')
+          swal.showLoading()
+          // $('#pleaseWaitDialog').modal();
+          // $('.container, .sidebarWrap').fadeOut(300);
+        };
+      })
+</script>
 {% block extra_js%}{%endblock%}
 </body>
 </html>

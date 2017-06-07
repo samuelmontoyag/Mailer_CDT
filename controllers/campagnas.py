@@ -294,10 +294,12 @@ def sendTest():
 @campagnas.route("/campagnas/delete", methods=['POST'])
 @login_required
 def delete():
-    id = request.form['id']
+    id_ = request.form['id']
     try:
+        print id_ 
+        print "entra try"
         m = get_mailchimp_api()
-        status = m.campaigns.delete(id)
+        status = m.campaigns.delete(id_)
     except mailchimp.CampaignDoesNotExistError:
         return index("<div class='alert alert-danger'>\
                       Error, no existe</div>")

@@ -181,18 +181,22 @@
         $('form').on("submit", function(){
             var no_error = true;
             if ( $('form [name="campaignName"]').val().length < 1){
-                alert("debe especificar un nombre de campaña");
-                no_error = false;
+                console.log($('form [name="campaignName"]').val())
+                swal('Error!',
+                     'Debe especificar un nombre de campaña!',
+                     'error');
+                return false;
+            }else if ( $('form [name="subject"]').val().length < 1){
+                swal('Error!',
+                     'Debe especificar un asunto',
+                     'error');
+                return false;
+            }else if( $('form [name="folder"]').val() == 0){
+                swal('Error!',
+                     'Debe seleccionar una área!',
+                     'error');
+                return false;
             }
-            if ( $('form [name="subject"]').val().length < 1){
-                alert("debe especificar un Asunto");
-                no_error = false;
-            }
-            if ( $('form [name="folder"]').val() == 0){
-                alert("debe seleccionar una área");
-                no_error = false;
-            }
-            return no_error;
         })
     })
 </script>
