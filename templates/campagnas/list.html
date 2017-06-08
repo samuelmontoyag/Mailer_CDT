@@ -5,14 +5,24 @@
 {%block content_wrapper%}
 <section class="content-header">
   <h1>
-    Campañas de mailing
+    Campañas de mailing 
   </h1>
 </section>
 <section class="content">
   <div class="row">
     <div class="col-md-3">
-      <a href="/campagnas/create" class="btn btn-lg btn-primary btn-block margin-bottom">Crear mailing</a>
+      
+      <form class="sidebar-form" id="buscar_campaign">
+        <div class="input-group">
+          <input type="text" id="search_campaign" name="search_campaign" class="form-control input-sm" placeholder="Filtro de Búsqueda...">
+              <span class="input-group-btn">
+                <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+                </button>
+              </span>
+        </div>
+      </form>
 
+      <a href="/campagnas/create" class="btn btn-lg btn-primary btn-block margin-bottom">Crear mailing</a>
       {%call lib.create_box("Áreas", "box-solid") %}
         <div>
           <ul class="sidebar-nav" id=folder_list>
@@ -29,6 +39,7 @@
     <div class="col-md-9">
       {%call lib.create_box("Mailings", "box-primary")%}
         {% if current_folder != None and  current_folder|string != '0' %}
+
           <div class="btn-group">
             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Opciones <span class="caret"></span></button>
             <ul class="dropdown-menu" role="menu">
@@ -218,7 +229,7 @@ Modals
   $(function(){
     var mailing_template =  Handlebars.compile($("#mailing-template").html());
     var areas_template =  Handlebars.compile($("#areas-template").html());
-    
+    var current_page = 0
     $.ajax({
       url: "{{url_for('.ajax_folder_list')}}",
       dataType: 'json',
@@ -245,11 +256,28 @@ Modals
         $("td#nameAlert").text($(tr).children('td#name').text())
         $("td#areaAlert").text("Área actual: "+$(tr).children('td#area').text())
     })
-  })
-</script>
+  });
 
-<script type="text/javascript">
-   $(".add_campaign").on('click', function(event){
+  $('#buscar_campaign').on('submit', function(event){
+        event.preventDefault()
+        var campaign = $('#search_campaign').val();
+        mostrar_campagnas(current_page, campaign);
+    });
+
+  function mostrar_campagnas(page, filter=''){
+      current_page = page
+      var url = '{{url_for(".show_campaing_by_filter")}}/'+page;
+      if (filter.length > 0)
+        url += "/"+ filter;
+      $.getJSON(url, function(data){
+        console.log(data);
+      }) 
+      
+    }
+
+  mostrar_campagnas(1);
+
+  $(".add_campaign").on('click', function(event){
       event.preventDefault();
       swal({
         title: 'Indique el nombre del área',
@@ -293,9 +321,7 @@ Modals
         }
       })
     });
-</script>
 
-<script type="text/javascript">
     $(document).on('click', '.delete_modal', function( event){
       event.preventDefault();
       var campagna_id = $(this).data("code_id")
