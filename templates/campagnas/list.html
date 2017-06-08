@@ -46,8 +46,8 @@
                 </div>
                 <div class="form-group">
                   <label>Rango de envio</label>
-                  <input class="form-control input-sm" type="text" placeholder="fecha envio inicial" name="sendtime_start">
-                  <input class="form-control input-sm" type="text" placeholder="fecha envio final" name="sendtime_end">
+                  <input class="form-control input-sm" type="text" id="sendtime_start" placeholder="Fecha envio inicial" name="sendtime_start">
+                  <input class="form-control input-sm" type="text" placeholder="Fecha último envío" id="sendtime_end" name="sendtime_end">
                 </div>
                 <div class="form-group">
                   <label>Area</label>
@@ -252,6 +252,7 @@ Modals
 </script>
 {% endraw %}
 
+  
 
 <script type="text/javascript">
   Handlebars.registerHelper('if_eq', function(a, b, opts) {
@@ -261,6 +262,33 @@ Modals
         return opts.inverse(this);
     }
   });
+
+  $(function () {
+    $('#sendtime_start').datetimepicker({
+      viewMode: 'years',
+      locale: 'es',
+      format: 'YYYY-MM-DD hh:mm:ss',
+      showClear: true,
+      widgetPositioning: {
+            horizontal: 'right',
+            vertical: 'bottom'
+      }
+    });
+  });
+
+  $(function () {
+    $('#sendtime_end').datetimepicker({
+      viewMode: 'years',
+      locale: 'es',
+      format: 'YYYY-MM-DD hh:mm:ss',
+      showClear: true,
+      widgetPositioning: {
+            horizontal: 'right',
+            vertical: 'bottom'
+      }
+    });
+  });
+
   $(function(){
     var mailing_template =  Handlebars.compile($("#mailing-template").html());
     var areas_template =  Handlebars.compile($("#areas-template").html());
