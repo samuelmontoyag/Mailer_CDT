@@ -12,14 +12,56 @@
   <div class="row">
     <div class="col-md-3">
       {%call lib.create_box("", "box-solid no-padding")%}
-        <form id="search-form">
-          <div class="input-group input-group-sm">
-            <input type="text" placeholder="buscar campaña ..." class="form-control">
-              <span class="input-group-btn">
-                <button type="button" class="btn btn-default btn-flat"><i class="fa fa-search" aria-hidden="true"></i></button>
-              </span>
+        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+          <div class="panel">
+            <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+              <form class="search_form">
+                <div class="input-group input-group-sm">
+                  <input type="text" placeholder="buscar campaña ..." name="title" class="form-control">
+                    <span class="input-group-btn">
+                      <button type="submit" class="btn btn-default btn-flat"><i class="fa fa-search" aria-hidden="true"></i></button>
+                    </span>
+                </div>
+              </form>
+              <a class="collapsed btn btn-link pull-right" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                Busqueda avanzada
+              </a>
+            </div>
           </div>
-        </form>
+          <div class="panel">
+            <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+              <form class="search_form">
+                <div class="form-group">
+                  <label for="title">Titulo de campaña</label>
+                  <input class="form-control input-sm" type="text" placeholder="Titulo de campaña" name="title">
+                </div>
+                <div class="form-group">
+                  <label>Estado de campaña</label>
+                  <ul class="list-unstyled">
+                    <li><input type="checkbox" name="status" checked class="minimal" value="sent" > <label>Enviadas</label></li>
+                    <li><input type="checkbox" name="status" checked class="minimal" value="save"> <label>Almacenada</label></li>
+                    <li><input type="checkbox" name="status" checked class="minimal" value="paused"> <label>Pausada</label></li>
+                    <li><input type="checkbox" name="status" checked class="minimal" value="sending"> <label>En proceso</label></li>
+                  </ul>
+                </div>
+                <div class="form-group">
+                  <label>Rango de envio</label>
+                  <input class="form-control input-sm" type="text" placeholder="fecha envio inicial" name="sendtime_start">
+                  <input class="form-control input-sm" type="text" placeholder="fecha envio final" name="sendtime_end">
+                </div>
+                <div class="form-group">
+                  <label>Area</label>
+                  <select class="select2" multiple="multiple" data-placeholder="Filtrar por areas" style="width: 100%;" name="folder_id"></select>
+                </div>
+
+                <button type="submit" class="btn btn-primary pull-right">Buscar <i class="fa fa-search" aria-hidden="true"></i></button>
+                <a class="btn btn-link pull-right" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  Busqueda simple
+                </a>
+              </form>
+            </div>
+          </div>
+        </div>
       {%endcall%}
       <a href="/campagnas/create" class="btn btn-lg btn-primary btn-block margin-bottom">Crear mailing</a>
 
@@ -135,26 +177,25 @@ Modals
   </div>
 </div>
 {% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="/static/plugins/iCheck/all.css">
        
-
-
+{% endblock %}
 
 {% block extra_js %}
-
+<script src="/static/plugins/iCheck/icheck.min.js"></script>
 <script src="/static/js/handlebars.js"></script>
-{% raw %}
 
+{% raw %}
 <script id="mailing-template" type="text/x-handlebars-template">
   {{#each data}}
   <tr id="c{{id}}">
     <td id="name"><a href="/campagnas/detalles/{{id}}">{{title}}</a></td>
-
     <td id="create" style="display:None">{{create_time}}</td>
     <td>{{from_name}} &lt;{{from_email}}&gt;</td>
     <td style="display:None">{{subject}}</td>
     <td id="lastSend">{{send_time}}</td>
     <td id="emails">{{emails_sent}}</td>
-
     <td id="area" class="area_td" data_folder_id="{{folder}}">
       {{folder_id}}
     </td>
@@ -200,6 +241,15 @@ Modals
     </li>
   {{/each}}
 </script>
+<script id="loading-template" type="text/x-handlebars-template">
+<tr>
+  <td colspan="6">
+    <div class="jumbotron text-center">
+      <h2 class="text-aqua"><i class="fa fa-cog fa-spin fa-2x fa-fw" aria-hidden="true"></i> Cargando ...</h2>
+    </div>
+  </td>
+</tr>
+</script>
 {% endraw %}
 
 
@@ -214,6 +264,7 @@ Modals
   $(function(){
     var mailing_template =  Handlebars.compile($("#mailing-template").html());
     var areas_template =  Handlebars.compile($("#areas-template").html());
+    var loading_template =  Handlebars.compile($("#loading-template").html());
     
     $.ajax({
       url: "{{url_for('.ajax_folder_list')}}",
@@ -241,11 +292,16 @@ Modals
         $("td#nameAlert").text($(tr).children('td#name').text())
         $("td#areaAlert").text("Área actual: "+$(tr).children('td#area').text())
     })
-  })
-</script>
+    $(".search_form").on('submit', function(e){
+      e.preventDefault();
+      $("#mailing_list").html(loading_template());
+      $.post('{{url_for(".ajax_buscar_campagnas")}}',$(this).serialize(), function(data){
+        var htmlData = mailing_template(data);
+        $("#mailing_list").html(htmlData);
+      }, 'json');
 
-<script type="text/javascript">
-   $(".add_campaign").on('click', function(event){
+    })
+    $(".add_campaign").on('click', function(event){
       event.preventDefault();
       swal({
         title: 'Indique el nombre del área',
@@ -281,9 +337,7 @@ Modals
         })
       })
     });
-</script>
 
-<script type="text/javascript">
     $(document).on('click', '.delete_campaign', function( event){
       event.preventDefault();
       var campagna_id = $(this).data("code_id")
@@ -304,5 +358,11 @@ Modals
         });
       })
     });
+    $('input').iCheck({
+      checkboxClass: 'icheckbox_square-blue',
+      radioClass: 'iradio_square-blue',
+      increaseArea: '50%' // optional
+    });
+  })
 </script>
 {% endblock %}
