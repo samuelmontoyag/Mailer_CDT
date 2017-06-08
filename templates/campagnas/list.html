@@ -73,7 +73,6 @@
           </ul>
         </div>
         <div style="text-align: center;">
-          
         <a href="#" class='btn btn-primary add_campaign' >Agregar Área</a>
       {%endcall%}
         </div>
@@ -239,11 +238,11 @@ Modals
 
 <script id="areas-template" type="text/x-handlebars-template">
   <li>
-    <a href="/campagnas">Todos</a>
+    <a href="#" class="areas_filter text-bold" data-area_id='' id="area_filter0">Todos</a>
   </li>
   {{#each this}}
     <li>
-      <a href="/campagnas/folder/{{folder_id}}">{{name}}</a> <span>({{cnt}})</span>
+      <a href="#" class="areas_filter" data-area_id='{{folder_id}}' id="area_filter{{folder_id}}">{{name}}</a> <span>({{cnt}})</span>
     </li>
   {{/each}}
 </script>
@@ -271,6 +270,11 @@ Modals
 
   
   $(function () {
+    var mailing_template =  Handlebars.compile($("#mailing-template").html());
+    var areas_template =  Handlebars.compile($("#areas-template").html());
+    var loading_template =  Handlebars.compile($("#loading-template").html());
+    var areas_select =  Handlebars.compile($("#areas-select").html());
+
     $('#sendtime_end, #sendtime_start').datetimepicker({
       viewMode: 'years',
       locale: 'es',
@@ -281,13 +285,6 @@ Modals
             vertical: 'bottom'
       }
     });
-  });
-
-  $(function(){
-    var mailing_template =  Handlebars.compile($("#mailing-template").html());
-    var areas_template =  Handlebars.compile($("#areas-template").html());
-    var loading_template =  Handlebars.compile($("#loading-template").html());
-    var areas_select =  Handlebars.compile($("#areas-select").html());
     
     $.ajax({
       url: "{{url_for('.ajax_folder_list')}}",
@@ -296,6 +293,9 @@ Modals
         // console.log(data)
         var htmlData = areas_template(data)
         $("#folder_list").html(htmlData);
+        var htmlData = areas_select(data);
+        $("#folder_id").html(htmlData);
+        console.log(data)
       }
     });
     $.ajax({
@@ -309,21 +309,21 @@ Modals
     });
 
 
-    $.ajax({
-      url: "{{url_for('.ajax_folder_list')}}",
-      dataType: 'json',
-      success: function(data) {
-        var htmlData = areas_select(data);
-        $("#folder_id").html(htmlData);
-      }
-    });
-
     $(".cambiarAreaModal").on("click", function () {
         var campaign_id = $(this).data('id');
         $("#campainID").val(campaign_id);
         tr = $("#c"+campaign_id)
         $("td#nameAlert").text($(tr).children('td#name').text())
         $("td#areaAlert").text("Área actual: "+$(tr).children('td#area').text())
+    })
+    $(document).on("click", ".areas_filter", function(){
+      $(".areas_filter").removeClass("text-bold");
+      $(this).addClass("text-bold");
+      $("#mailing_list").html(loading_template());
+      $.post('{{url_for(".ajax_buscar_campagnas")}}',{folder_id: $(this).data('area_id')}, function(data){
+        var htmlData = mailing_template(data);
+        $("#mailing_list").html(htmlData);
+      }, 'json');
     })
     $(".search_form").on('submit', function(e){
       e.preventDefault();
