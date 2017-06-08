@@ -30,30 +30,12 @@ def initialize_app(app):
 
 @campagnas.route("/campagnas", methods=['GET', 'POST'])
 @login_required
-def index(message=None, folder=None, page=0):
+def index(message=None, folder=None):
     data = {
-        'qty': 0,
-        'lists': [],
         'message': message,
-        'current_folder': folder,
-        'page': page
+        'current_folder': folder
     }
-    return render_template('campagnas/list.html', title="NOMBRE", **data)
-
-@campagnas.route("/campagnas/<int:page>/<filter_>",
-              methods=["POST", "GET"])
-@campagnas.route("/campagnas/<int:page>", methods=["POST", "GET"])
-@campagnas.route("/campagnas", methods=["POST", "GET"])
-@login_required
-def show_campaing_by_filter(page=1, filter_=None):
-    m = get_mailchimp_api()
-    campaignList = m.campaigns.list()
-    data = {}
-    for item in campaignList['data']:
-        if filter_ in item['from_name'] or filter_ in item['title']:
-            data.update(item)
     return render_template('campagnas/list.html', **data)
-
 
 
 @campagnas.route("/campagnas/ajax/listar", methods=['GET', 'POST'])
@@ -64,22 +46,24 @@ def ajax_listar_campagnas():
     return json.dumps(campaignList)
 
 
+@campagnas.route("/campagnas/ajax/buscar", methods=['POST'])
+@login_required
+def ajax_buscar_campagnas():
+    filters = {'title': request.form.get('title', ''),
+               'exact': False,
+               'status': ','.join(request.form.getlist('status')),
+               'folder_id': ','.join(request.form.getlist('folder_id')),
+               'sendtime_start': request.form.get('sendtime_start', ''),
+               'sendtime_end': request.form.get('sendtime_end', '')
+               }
+    m = get_mailchimp_api()
+    campaignList = m.campaigns.list(filters=filters)
+    return json.dumps(campaignList)
+
+
 @campagnas.route("/campagnas/ajax/folders", methods=['GET', 'POST'])
 def ajax_folder_list():
     return json.dumps(get_mailchimp_api().folders.list("campaign"))
-
-
-@campagnas.route("/campagnas/page/<page>", methods=['GET', 'POST'])
-@login_required
-def page(page=None):
-    return index(None, None, page)
-
-
-@campagnas.route("/campagnas/folder/<folder>/page/<page>",
-                 methods=['GET', 'POST'])
-@login_required
-def pageAndFolder(folder=None, page=None):
-    return index(None, folder, page)
 
 
 @campagnas.route("/campagnas/folder/<folder>", methods=['GET', 'POST'])
@@ -364,5 +348,4 @@ def clean_html(html):
     mailchimp_datas = soup.findAll('table', {'id': 'canspamBarWrapper'})
     for data in mailchimp_datas:
         data.findParent().decompose()
-    return unicode(soup )
-
+    return unicode(soup)
