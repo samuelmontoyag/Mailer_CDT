@@ -40,6 +40,22 @@ def index(message=None, folder=None, page=0):
     }
     return render_template('campagnas/list.html', title="NOMBRE", **data)
 
+@campagnas.route("/campagnas/<int:page>/<filter_>",
+              methods=["POST", "GET"])
+@campagnas.route("/campagnas/<int:page>", methods=["POST", "GET"])
+@campagnas.route("/campagnas", methods=["POST", "GET"])
+@login_required
+def show_campaing_by_filter(page=1, filter_=None):
+    m = get_mailchimp_api()
+    campaignList = m.campaigns.list()
+    data = {}
+    for item in campaignList['data']:
+        if filter_ in item['from_name'] or filter_ in item['title']:
+            data.update(item)
+    return render_template('campagnas/list.html', **data)
+
+
+
 @campagnas.route("/campagnas/ajax/listar", methods=['GET', 'POST'])
 @login_required
 def ajax_listar_campagnas():
