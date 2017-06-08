@@ -1,29 +1,41 @@
 {% extends 'base.html' %}
 {% import 'form_helper.html' as lib with context %}
 
-
-{%block content%}
-{%call lib.create_box("Lista de plantillas eliminadas", "box-primary")%}
-
-
-<h2>Eventos</h2>
-
-<a class='btn btn-default' style="float:right" href="http://www.cdt.cl/wp-admin/post-new.php?post_type=event">Crear evento</a>
-<table class="table table-hover table-striped able table-bordered">
-	<tr>
-		<th>ID</th>
-		<th>Titulo</th>
-		<th>Fecha del evento</th>
-	</tr>
-{% for event in list %}
-	<tr>
-		<td>{{event.event_id}}</td>
-		<td>{{event.event_name}}</td>
-		<td>{{event.event_start_date}}</td>
-	</tr>
-{% endfor %}
-</table>
-
-{{list.event_name}}
-{% endcall%}
+{%block content_wrapper%}
+<section class="content-header">
+  <h1>
+    Eventos
+  </h1>
+</section>
+<section class="content">
+  <div class="row">
+    <div class="col-md-3">
+      <a class='btn btn-lg btn-primary btn-block' href="http://www.cdt.cl/wp-admin/post-new.php?post_type=event">
+        <i class="fa fa-calendar" aria-hidden="true"></i>  Crear Evento 
+      </a>
+    </div>
+    <div class="col-md-9">
+      {%call lib.create_box("Lista de Eventos", "box-primary")%}
+        <table class="table table-bordered">
+          <thead>
+            <th>ID</th>
+            <th>Titulo</th>
+            <th>Fecha del evento</th>
+          </thead>
+          {% for event in list %}
+			<tr>
+				<td>{{event.event_id}}</td>
+				<td>{{event.event_name}}</td>
+				<td>{{event.event_start_date}}</td>
+			</tr>
+			{% endfor %}
+        </table>
+      {{list.event_name}}
+      {%endcall%}
+    </div>
+  </div>
+</section>
 {% endblock %}
+
+
+

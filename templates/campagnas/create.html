@@ -122,7 +122,7 @@
             </div>
         </div>
     </div>
-    <button type="submit" id="create_mailing" class="btn btn-info btn-lg">Crear Mailing</button>
+    <button type="submit" id="create_mailing" class="btn btn-warning btn-lg">Crear Mailing</button>
 
 </form>
 
@@ -134,7 +134,7 @@
         <h4 class="modal-title" id="myModalLabel">Insertar plantilla</h4>
       </div>
       <div class="modal-body">
-        <select name="template"  class="form-control" id="templateSelect">
+        <select name="template" class="form-control input-lg" id="templateSelect">
             {% for template in template_lists %}
                 <option value="{{template.id}}">{{template.name}}</option>
             {% endfor %}
