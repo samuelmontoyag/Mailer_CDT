@@ -112,31 +112,27 @@ def create2():
             status = m.templates.add(template_name, template_html)
         except mailchimp.Error, e:
             return "Ha ocurrido un error con mailchimp", e
-        message = "<div class='alert alert-success'>"
-        message += "Plantilla agregada correctamente"
-        message += "</div>"
-    return index(message)
+        flash("Plantilla agregada correctamente", "success")
+    return redirect(url_for('.index'))
 
 
-@template.route("/plantillas/update", methods=['POST'])
+@template.route("/plantillas/update/<template_id>", methods=['POST'])
 @login_required
-def update():
-    if request.method == 'POST':
-        template_id = request.form['id']
-        template_name = request.form['templateName']
-        template_html = request.form['html']
+def update(template_id):
+    template_name = request.form['templateName']
+    template_html = request.form['html']
 
-        try:
-            template_data = {'name': template_name,
-                             'html': template_html
-                             }
-            m = get_mailchimp_api()
-            status = m.templates.update(template_id, template_data)
-        except mailchimp.Error, e:
-            return "Ha ocurrido un error con mailchimp", e
-        message = "<div class='alert alert-success'>"
-        message += "Plantilla actualizada correctamente"
-        message += "</div>"
+    try:
+        template_data = {'name': template_name,
+                         'html': template_html
+                         }
+        m = get_mailchimp_api()
+        status = m.templates.update(template_id, template_data)
+    except mailchimp.Error, e:
+        return "Ha ocurrido un error con mailchimp", e
+    message = "<div class='alert alert-success'>"
+    message += "Plantilla actualizada correctamente"
+    message += "</div>"
     return index(message)
 
 
