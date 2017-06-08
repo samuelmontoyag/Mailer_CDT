@@ -28,6 +28,7 @@ def initialize_app(app):
 def index():
     return render_template('index.html', title="Bienvenido")
 
+
 @home.route("/statistics", methods=['GET', 'POST'])
 @login_required
 def statistics():

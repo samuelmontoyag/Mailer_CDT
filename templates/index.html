@@ -1,16 +1,6 @@
 {% extends "base.html" %}
 
-{% block css_section %}
-  <link href="{{ url_for('static', filename='css/code.css') }}" rel="stylesheet">
-  <style>
-  .repo{height:150px;}
-  .project-menu{font-size: 12px;}
-  .file-navigator{display:inline-block;}
-  </style>
-{% endblock %}
-
 {% block content %}
-
 <section class="content">
   <div class="row">
     <div class="col-lg-3 col-xs-6">
@@ -49,12 +39,10 @@
         <a href="/plantillas" class="small-box-footer">Ver detalles <i class="fa fa-arrow-right"></i></a>
       </div>
     </div>
-
   </div>
 </section>
-
-
 {% endblock %}
+
 {% block extra_js%}
 <script type="text/javascript">
   $(function () {
@@ -66,5 +54,4 @@
     }, 'json')
   });
 </script>
-indicador_mailing
 {% endblock %}
