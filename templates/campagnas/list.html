@@ -11,7 +11,18 @@
 <section class="content">
   <div class="row">
     <div class="col-md-3">
+      {%call lib.create_box("", "box-solid no-padding")%}
+        <form id="search-form">
+          <div class="input-group input-group-sm">
+            <input type="text" placeholder="buscar campaña ..." class="form-control">
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default btn-flat"><i class="fa fa-search" aria-hidden="true"></i></button>
+              </span>
+          </div>
+        </form>
+      {%endcall%}
       <a href="/campagnas/create" class="btn btn-lg btn-primary btn-block margin-bottom">Crear mailing</a>
+
 
       {%call lib.create_box("Áreas", "box-solid") %}
         <div>
@@ -93,7 +104,6 @@ Modals
 </div>
 
 
-
 <div class="modal fade" id="cambiarAreaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -134,19 +144,9 @@ Modals
 <script src="/static/js/handlebars.js"></script>
 {% raw %}
 
-<script type="text/javascript">  
-  Handlebars.registerHelper('if_eq', function(a, b, opts) {
-    if (a == b) {
-        return opts.fn(this);
-    } else {
-        return opts.inverse(this);
-    }
-  });
-</script>
-
 <script id="mailing-template" type="text/x-handlebars-template">
   {{#each data}}
-  <tr id="c{{campaign.id}}">
+  <tr id="c{{id}}">
     <td id="name"><a href="/campagnas/detalles/{{id}}">{{title}}</a></td>
 
     <td id="create" style="display:None">{{create_time}}</td>
@@ -155,40 +155,28 @@ Modals
     <td id="lastSend">{{send_time}}</td>
     <td id="emails">{{emails_sent}}</td>
 
-
     <td id="area" class="area_td" data_folder_id="{{folder}}">
       {{folder_id}}
     </td>
-
     <td>
       <div class="btn-group">
         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
           Opciones <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" role="menu">
-          <li>
-            <a href="/campagnas/detalles/{{id}}">Detalles</a>
-          </li>
+          <li><a href="/campagnas/detalles/{{id}}">Detalles</a></li>
           {{#if_eq send_time None}}
-          <li>
-            <a href="/campagnas/edit/{{id}}">Editar</a>
-          </li>
+            <li><a href="/campagnas/edit/{{id}}">Editar</a></li>
+            <li>
+              <a href="#" data-toggle="modal" data-id="{{id}}" data-target="#cambiarAreaModal" class="cambiarAreaModal">Cambiar área</a>
+            </li>
           
           {{else}}
-          <li>
-            <a href="/campagnas/clone/{{id}}">Clonar</a>
-          </li>
+            <li><a href="/campagnas/clone/{{id}}">Clonar</a></li>
           {{/if_eq}}
 
-
-          {{#if_eq send_time None}}
           <li>
-            <a href="#" data-toggle="modal" data-id="{{id}}" data-target="#cambiarAreaModal" class="cambiarAreaModal">Cambiar <area shape="" coords="" href="" alt=""></a>
-          </li>
-          {{/if_eq}}
-          
-          <li>
-            <a href="#" data-code_id={{id}} class="delete_modal">Eliminar</a>
+            <a href="#" data-code_id={{id}} class="delete_campaign">Eliminar</a>
           </li>
         
         </ul>
@@ -196,11 +184,12 @@ Modals
     </td>
   </tr>
   {{else}}
-  <tr>
-    <td colspan="10"><div><h3>No hay campañas creadas</h3></div></td>
-  </tr>
+    <tr>
+      <td colspan="10"><div><h3>No encontraron campañas</h3></div></td>
+    </tr>
   {{/each}}
 </script>
+
 <script id="areas-template" type="text/x-handlebars-template">
   <li>
     <a href="/campagnas">Todos</a>
@@ -215,6 +204,13 @@ Modals
 
 
 <script type="text/javascript">
+  Handlebars.registerHelper('if_eq', function(a, b, opts) {
+    if (a == b) {
+        return opts.fn(this);
+    } else {
+        return opts.inverse(this);
+    }
+  });
   $(function(){
     var mailing_template =  Handlebars.compile($("#mailing-template").html());
     var areas_template =  Handlebars.compile($("#areas-template").html());
@@ -255,7 +251,7 @@ Modals
         title: 'Indique el nombre del área',
         input: 'text',
         showCancelButton: true,
-        cancelButtonText: 'Atrás',
+        cancelButtonText: 'Cancelar',
         confirmButtonText: 'Crear',
         allowOutsideClick: false,
         reverseButtons: true,
@@ -283,20 +279,12 @@ Modals
           type: 'success',
           html: 'Lista Creada: ' + result
         })
-      },function (dismiss) {
-        if (dismiss === 'cancel') {
-          swal(
-            'Cancelada',
-            'Ningún área ha sido creada',
-            'error'
-          )
-        }
       })
     });
 </script>
 
 <script type="text/javascript">
-    $(document).on('click', '.delete_modal', function( event){
+    $(document).on('click', '.delete_campaign', function( event){
       event.preventDefault();
       var campagna_id = $(this).data("code_id")
       swal({
@@ -310,25 +298,10 @@ Modals
         reverseButtons: true,
         buttonsStyling: true
       }).then(function () {
-        var form = document.createElement("form");
-        form.setAttribute("method", "post");
-        form.setAttribute("action", '/campagnas/delete');
-        var campagna = document.createElement("input");
-        campagna.setAttribute("type", "hidden");
-        campagna.setAttribute("name", 'id');
-        campagna.setAttribute("id", 'deleteID');
-        campagna.setAttribute("value", campagna_id);
-        form.appendChild(campagna);
-        document.body.appendChild(form);
-        form.submit();
-      }, function (dismiss) {
-        if (dismiss === 'cancel') {
-          swal(
-            'Cancelada',
-            'La campaña no fue eliminada',
-            'error'
-          )
-        }
+        $.post('{{url_for(".delete", campaign_id="")}}'+campagna_id, function(data){
+          swal({type: 'success', html: 'campaña eliminada correctamente'})
+          $("#c"+campagna_id).hide(500);
+        });
       })
     });
 </script>

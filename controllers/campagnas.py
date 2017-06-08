@@ -291,22 +291,17 @@ def sendTest():
     return index(message)
 
 
-@campagnas.route("/campagnas/delete", methods=['POST'])
+@campagnas.route("/campagnas/delete/<campaign_id>", methods=['POST'])
 @login_required
-def delete():
-    id_ = request.form['id']
+def delete(campaign_id):
     try:
-        print id_ 
-        print "entra try"
         m = get_mailchimp_api()
-        status = m.campaigns.delete(id_)
+        status = m.campaigns.delete(campaign_id)
     except mailchimp.CampaignDoesNotExistError:
-        return index("<div class='alert alert-danger'>\
-                      Error, no existe</div>")
+        return json.dumps({"error": u"la campaña no existe"})
     except mailchimp.Error, e:
-        return "Ha ocurrido un error con mailchimp", e
-    flash("Campaña eliminada con éxito", "success")
-    return render_template('campagnas/list.html')
+        return json.dumps({"error": u"Ha ocurrido un error con mailchimp"})
+    return json.dumps({"ok": u"campaña eliminada"})
 
 
 def replace_tags(html, data):
