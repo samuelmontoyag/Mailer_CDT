@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% import 'form_helper.html' as lib with context %}
+
+{%block content_wrapper%}
+<section class="content-header">
+  <h1>
+    Plantillas eliminadas
+  </h1>
+</section>
+<section class="content">
+  <div class="row">
+    <div class="col-md-3">
+    <a class='btn btn-lg btn-primary btn-block' href="/plantillas">
+        <i class="fa fa-file-text-o" aria-hidden="true"></i>  ver plantillas
+      </a>
+    </div>
+    <div class="col-md-9">
+      {%call lib.create_box("Lista de plantillas", "box-primary")%}
+        <table class="table table-bordered">
+          <thead>
+            <th>Nombre</th>
+            <th>Fecha creación</th>
+            <th></th>
+          </thead>
+          {% for list in lists %}
+          <tr>
+            <td><a href="/correos/details/{{list.id}}">{{list.name}}</a></td>
+            <td>{{list.date_created}}</td>
+            <td>
+              <div class="btn-group">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                  Opciones <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a href="/plantillas/reactivate/{{list.id}}">Restaurar</a></li>
+                </ul>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </table>
+      {%endcall%}
+    </div>
+  </div>
+</section>
+{% endblock %}
