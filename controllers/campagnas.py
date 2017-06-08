@@ -40,6 +40,20 @@ def index(message=None, folder=None, page=0):
     }
     return render_template('campagnas/list.html', title="NOMBRE", **data)
 
+@campagnas.route("/campagnas/<int:page>/<filter_>",
+              methods=["POST", "GET"])
+@campagnas.route("/campagnas/<int:page>", methods=["POST", "GET"])
+@campagnas.route("/campagnas", methods=["POST", "GET"])
+@login_required
+def show_campaing_by_filter(page=1, filter_=None):
+    m = get_mailchimp_api()
+    campaignList = m.campaigns.list()
+    data = json.dumps(campaignList)
+    # NO SE COMO FILTRAR EN MAILSHIT   
+    return data
+
+
+
 @campagnas.route("/campagnas/ajax/listar", methods=['GET', 'POST'])
 @login_required
 def ajax_listar_campagnas():
@@ -70,7 +84,6 @@ def pageAndFolder(folder=None, page=None):
 @login_required
 def folder(folder=None):
     return index(None, folder)
-
 
 @campagnas.route("/campagnas/folder/setArea", methods=['POST'])
 @login_required
