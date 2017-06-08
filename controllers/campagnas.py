@@ -38,7 +38,6 @@ def index(message=None, folder=None):
     return render_template('campagnas/list.html', **data)
 
 
-
 @campagnas.route("/campagnas/ajax/listar", methods=['GET', 'POST'])
 @login_required
 def ajax_listar_campagnas():
@@ -71,7 +70,6 @@ def ajax_folder_list():
 @login_required
 def folder(folder=None):
     return index(None, folder)
-
 
 @campagnas.route("/campagnas/folder/setArea", methods=['POST'])
 @login_required
