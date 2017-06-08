@@ -38,6 +38,7 @@ def index(message=None, folder=None):
     return render_template('campagnas/list.html', **data)
 
 
+
 @campagnas.route("/campagnas/ajax/listar", methods=['GET', 'POST'])
 @login_required
 def ajax_listar_campagnas():
