@@ -55,8 +55,10 @@ def ajax_buscar_campagnas():
                'status': ','.join(request.form.getlist('status')),
                'folder_id': ','.join(request.form.getlist('folder_id')),
                'sendtime_start': request.form.get('sendtime_start', ''),
-               'sendtime_end': request.form.get('sendtime_end', '')
+               'sendtime_end': request.form.get('sendtime_end', ''),
+               'folder_id': request.form.get('folder_id', '')
                }
+    print(filters['folder_id'])
     m = get_mailchimp_api()
     campaignList = m.campaigns.list(filters=filters)
     return json.dumps(campaignList)

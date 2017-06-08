@@ -51,7 +51,7 @@
                 </div>
                 <div class="form-group">
                   <label>Area</label>
-                  <select class="select2" multiple="multiple" data-placeholder="Filtrar por areas" style="width: 100%;" name="folder_id"></select>
+                  <select class="select2" multiple="multiple" data-placeholder="Filtrar por areas" style="width: 100%;" id="folder_id" name="folder_id"></select>
                 </div>
 
                 <button type="submit" class="btn btn-primary pull-right">Buscar <i class="fa fa-search" aria-hidden="true"></i></button>
@@ -231,6 +231,12 @@ Modals
   {{/each}}
 </script>
 
+<script id="areas-select" type="text/x-handlebars-template">
+  {{#each this}}
+    <option value="{{folder_id}}">{{name}}</option>
+  {{/each}}
+</script>
+
 <script id="areas-template" type="text/x-handlebars-template">
   <li>
     <a href="/campagnas">Todos</a>
@@ -263,21 +269,9 @@ Modals
     }
   });
 
+  
   $(function () {
-    $('#sendtime_start').datetimepicker({
-      viewMode: 'years',
-      locale: 'es',
-      format: 'YYYY-MM-DD hh:mm:ss',
-      showClear: true,
-      widgetPositioning: {
-            horizontal: 'right',
-            vertical: 'bottom'
-      }
-    });
-  });
-
-  $(function () {
-    $('#sendtime_end').datetimepicker({
+    $('#sendtime_end, #sendtime_start').datetimepicker({
       viewMode: 'years',
       locale: 'es',
       format: 'YYYY-MM-DD hh:mm:ss',
@@ -293,6 +287,7 @@ Modals
     var mailing_template =  Handlebars.compile($("#mailing-template").html());
     var areas_template =  Handlebars.compile($("#areas-template").html());
     var loading_template =  Handlebars.compile($("#loading-template").html());
+    var areas_select =  Handlebars.compile($("#areas-select").html());
     
     $.ajax({
       url: "{{url_for('.ajax_folder_list')}}",
@@ -310,6 +305,16 @@ Modals
         // console.log(data)
         var htmlData = mailing_template(data);
         $("#mailing_list").html(htmlData);
+      }
+    });
+
+
+    $.ajax({
+      url: "{{url_for('.ajax_folder_list')}}",
+      dataType: 'json',
+      success: function(data) {
+        var htmlData = areas_select(data);
+        $("#folder_id").html(htmlData);
       }
     });
 
