@@ -183,7 +183,7 @@ Modals
 
           {{#if_eq send_time None}}
           <li>
-            <a href="#" data-toggle="modal" data-id="{{id}}" data-target="#cambiarAreaModal" class="cambiarAreaModal">Mover a otra Área</a>
+            <a href="#" data-toggle="modal" data-id="{{id}}" data-target="#cambiarAreaModal" class="cambiarAreaModal">Cambiar <area shape="" coords="" href="" alt=""></a>
           </li>
           {{/if_eq}}
           
@@ -245,11 +245,6 @@ Modals
         $("td#nameAlert").text($(tr).children('td#name').text())
         $("td#areaAlert").text("Área actual: "+$(tr).children('td#area').text())
     })
-    $("#confirmDelete").on("click", function () {
-      $("#confirmDelete").text("Eliminando ...");
-      $("#confirmDelete").attr("disabled", "disabled");
-      $("#confirmDeleteForm").submit()
-    });
   })
 </script>
 
