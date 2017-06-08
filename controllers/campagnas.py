@@ -260,16 +260,16 @@ def clone(id):
 @campagnas.route("/campagnas/send", methods=['POST'])
 @login_required
 def send():
-    id = request.form['id']
+    id_ = request.form['id']
     try:
         m = get_mailchimp_api()
-        status = m.campaigns.send(id)
+        status = m.campaigns.send(id_)
     except mailchimp.Error, e:
         message = "<div class='alert alert-danger'>"
         message += "Se encontraron errores con mailchimp "
         message += str(e)+"</div>"
         return index(message)
-    return details(id)
+    return details(id_)
 
 
 @campagnas.route("/campagnas/sendTest", methods=['POST'])
@@ -305,9 +305,8 @@ def delete():
                       Error, no existe</div>")
     except mailchimp.Error, e:
         return "Ha ocurrido un error con mailchimp", e
-    message = "<div class='alert alert-success'>"
-    message += "Eliminado Correctamente</div>"
-    return index(message)
+    flash("Campaña eliminada con éxito", "success")
+    return render_template('campagnas/list.html')
 
 
 def replace_tags(html, data):
