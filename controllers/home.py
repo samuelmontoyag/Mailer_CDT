@@ -25,11 +25,4 @@ def initialize_app(app):
 @home.route("/", methods=['GET', 'POST'])
 @login_required
 def index():
-
     return render_template('index.html', title="Bienvenido")
-
-
-@home.route("/private", methods=['GET', 'POST'])
-@login_required
-def private():
-    return render_template('private.html', title="NOMBRE")

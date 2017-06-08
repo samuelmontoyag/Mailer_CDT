@@ -103,7 +103,7 @@ def initialize_app(app):
     @app.errorhandler(401)
     def custom_401(error):
         flash(u'No está autorizado para ver esta página.', "error")
-        return render_template('private.html')
+        return redirect(url_for('auth.login'))
 
     login_manager.init_app(app)
     app.register_blueprint(auth)
@@ -130,7 +130,7 @@ def login():
 def logout():
     logout_user()
     flash(u'Sesion cerrada correctamente.', "success")
-    return render_template('private.html')
+    return redirect(url_for('auth.login'))
 
 
 @auth.route("/auth/profile", methods=['GET', 'POST'])
