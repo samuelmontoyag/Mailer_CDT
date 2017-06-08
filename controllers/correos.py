@@ -37,8 +37,7 @@ def index(message=None):
     except mailchimp.Error, e:
         return "Ha ocurrido un error al intentar conectar con mailchimp"
     data = {
-        'lists': lists['data'],
-        'message': message
+        'lists': lists['data']
     }
     return render_template('correos/list.html', title="NOMBRE", **data)
 
