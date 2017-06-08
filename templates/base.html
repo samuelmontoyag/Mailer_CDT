@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Mailing | CDT</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <!-- Bootstrap 3.3.6 -->
+  <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="/static/css/font-awesome.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="/static/css/ionicons.min.css">
+  <link rel="stylesheet" href="/static/css/select2.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/static/plugins/SmartNotification/SmartNotification.css">
+  <link rel="stylesheet" href="/static/css/sweetalert.css">
+
+  {% block extra_css%}{%endblock%}
+
+  <link rel="stylesheet" href="/static/css/AdminLTE.min.css">
+  <link rel="stylesheet" href="/static/css/skins/_all-skins.min.css">
+
+</head>
+<body class="hold-transition skin-purple-light sidebar-mini">
+<!-- Site wrapper -->
+<div class="wrapper">
+
+  <header class="main-header">
+    <!-- Logo -->
+    <a href="/" class="logo">
+      <!-- mini logo for sidebar mini 50x50 pixels -->
+      <span class="logo-mini"><b>CDT</b></span>
+      <!-- logo for regular state and mobile devices -->
+      <span class="logo-lg"><b>Mailing</b> <small>CDT</small></span>
+    </a>
+    <!-- Header Navbar: style can be found in header.less -->
+    <nav class="navbar navbar-static-top">
+      <!-- Sidebar toggle button-->
+      <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+      <div class="navbar-custom-menu">
+        <ul class="nav navbar-nav">
+          <li class="dropdown user user-menu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <img src="/static/img/user2-160x160.jpg" class="user-image" alt="User Image">
+              <span class="hidden-xs">{{current_user.doc.user_name}}</span>
+            </a>
+            <ul class="dropdown-menu">
+              <!-- User image -->
+              <li class="user-header">
+                <img src="/static/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+
+                <p>{{current_user.doc.user_name}}
+                  <small>{{current_user.doc.user_login}}</small>
+                </p>
+              </li>
+              <!-- Menu Footer-->
+              <li class="user-footer">
+                <div class="pull-left">
+                  <a href="/auth/profile" title="Ver Perfil" class="btn btn-default btn-flat">Mi perfil</a>
+                </div>
+                <div class="pull-right">
+                  <a href="/auth/logout" class="btn btn-default btn-flat">Cerrar sesion</a>
+                </div>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      
+    </nav>
+  </header>
+
+  <aside class="main-sidebar">
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+      <ul class="sidebar-menu">
+        <li>
+          <a href="/">
+            <i class="fa fa-home"></i> <span>Inicio</span>
+          </a>
+        </li>
+        
+        <li>
+          <a href="/campagnas">
+            <i class="fa fa-envelope-o" aria-hidden="true"></i> <span>Mailing</span>
+          </a>
+        </li>
+        
+        <li>
+          <a href="/correos">
+            <i class="fa fa fa-th-list" aria-hidden="true"></i> <span>Lista de Correos</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="/eventos">
+            <i class="fa fa fa-lg fa-fw fa-calendar"></i> <span>Eventos</span>
+          </a>
+        </li>
+        <li>
+          <a href="/plantillas">
+            <i class="fa fa-file-powerpoint-o"></i> <span>Plantillas</span>
+          </a>
+        </li>
+        {% if current_user.doc.user_role.lower() == "admin" or  current_user.doc.user_role.lower() == "root" %}
+          <li>
+          <a href="/auth/users"><i class="fa fa-lg fa-fw fa-street-view"></i> <span>Usuarios</span></a>
+          </li>
+          {% endif %}
+        {%block options%} {%endblock%}
+      </ul>
+    </section>
+  </aside>
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+  {% block content_wrapper %}
+   
+    <!-- Main content -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <!-- <strong>Title</strong> --> {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    <section class="content">
+    {%block content%} {%endblock%}
+    </section>
+    <!-- /.content -->
+    {%endblock%}
+  </div>
+  <!-- /.content-wrapper -->
+
+  <footer class="main-footer">
+    <div class="pull-right hidden-xs">
+      <b>Version</b> 2.0
+    </div>
+    <strong>Copyright &copy; 2017 <a href="http://nice.cl">Nice Desarrollo</a>.</strong> Todos los derechos
+    reservados.
+  </footer>
+  <div class="modal fade" id="pleaseWaitDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-keyboard="false">
+      <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 class="modal-title" id="myModalLabel">Cargando...</h4>
+            </div>
+            <div class="modal-body">
+              <div class="modal-body">
+                <div class="progress progress-striped active">
+                  <div class="bar" style="width: 100%;"></div>
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  <!-- Add the sidebar's background. This div must be placed
+       immediately after the control sidebar -->
+  <div class="control-sidebar-bg"></div>
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery 2.2.3 -->
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script src="/static/plugins/SmartNotification/SmartNotification.min.js"></script>
+<script src="/static/js/sweetalert-dev.js"></script>
+
+<script src="/static/js/select2.min.js"></script>
+<script src="/static/js/holder.js"></script>
+<script src="/static/js/d3.v3.min.js"></script>
+<script src="/static/js/nv.d3.min.js"></script>
+
+<div class="flash">
+      <script>
+      $(function(){
+        {% for message in get_flashed_messages(category_filter=["error"]) %}
+          $.msgbox( "{{ message }}", {type: "error"});
+        {% endfor %}
+        {% for message in get_flashed_messages(category_filter=["success"]) %}
+          $.msgGrowl({'title': " ", 'type': 'success', 'text': "{{ message }}"});
+        {% endfor %}        
+      });
+      </script>
+</div>
+  
+<!-- AdminLTE App -->
+<script src="/static/js/app.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() {
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          {%if category =="error"%}
+            $.smallBox({
+                title: "Se ha producido un error",
+                content : "{{message}}",
+                color : "#C46A69",
+                timeout: 10000,
+                iconSmall : "fa fa-warning shake animated"
+              });
+          {%else%}
+            $.smallBox({
+                content : "{{message}}",
+                color : "#296191",
+                timeout: 10000,
+                icon : "fa fa-bell fa-small swing animated"
+              });
+          {%endif%}
+        {% endfor %}
+      {% endif %}
+  {% endwith %}
+  });
+</script>
+<script type="text/javascript">
+      $(function(){
+        $('select').select2();
+        $('body').hide().fadeIn(500);
+        window.onbeforeunload = function(e) {
+          swal('Cargando Datos')
+          swal.showLoading()
+          // $('#pleaseWaitDialog').modal();
+          // $('.container, .sidebarWrap').fadeOut(300);
+        };
+      })
+</script>
+{% block extra_js%}{%endblock%}
+</body>
+</html>

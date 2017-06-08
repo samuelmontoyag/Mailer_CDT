@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+    <link href="{{ url_for('static', filename='css/signin.css') }}" rel="stylesheet">
+    <div class="container">
+        {% for message in get_flashed_messages() %}
+            <div class=flash>{{ message }}</div>
+        {% endfor %}
+    </div>
+    <br>
+    Si posee una cuenta puede iniciar <a href="/auth/login">sesión aquí</a>
+{% endblock %}
