@@ -62,19 +62,13 @@
             <input type="text" name="subject" placeholder="ej: Noticias cdt"  class="form-control" maxlength="145">
         </div>
     </div>
+    <textarea name="html" rows="20" style="min-height:250px;">
+    </textarea><br>
     
-    <div class="form-group">
-        <label >Html</label>
-        <div >
-            <textarea name="html" rows="20" style="min-height:200px;" id="html">
-            </textarea>
-        </div>
-    </div>
-    <div class="form-group">
-        <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
-            Insertar plantilla
-        </button>
-    </div>
+    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal"> 
+        Insertar plantilla
+    </button>
+    <br><br>
     <div class="panel panel-default">
         <div class="panel-heading">
           <h4 class="panel-title">
@@ -128,11 +122,8 @@
             </div>
         </div>
     </div>
-   <!--  <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-10">
-            <button type="submit" class="btn btn-info btn-lg">Crear</button>
-        </div>
-    </div> -->
+    <button type="submit" id="create_mailing" class="btn btn-info btn-lg">Crear Mailing</button>
+
 </form>
 
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -180,7 +171,6 @@
             });
         });
         $('form').on("submit", function(){
-            var no_error = true;
             if ( $('form [name="campaignName"]').val().length < 1){
                 console.log($('form [name="campaignName"]').val())
                 swal('Error!',
