@@ -1,0 +1,120 @@
+{# -----  diferentes tipos de campos ------ #}
+{% macro render_field(form, field, kwargs={}, caller=None) %}
+  {% set has_error = field.errors | length > 0 %}
+  <div class="form-group{{ ' has-error' if has_error else '' }}">
+    <label for="{{ field.id }}">{{ field.label.text }}{% if field.flags.required %} *{% endif %}</label>
+      {% if field.type != 'BooleanField' %}
+        {% set _dummy = kwargs.setdefault('class', 'form-control') %}
+      {% else %}
+        {% set _dummy = kwargs.setdefault('data-toggle', 'toggle') %}
+        {% set _dummy = kwargs.setdefault('data-on', 'Activado') %}
+        {% set _dummy = kwargs.setdefault('data-off', 'Desactivado') %}
+      {% endif %}
+      {{ field(**kwargs)|safe }}
+      {% if field.description %}
+        <p class="help-block">{{ field.description }}</p>
+      {% endif %}
+  </div>
+{% endmacro %}
+
+{% macro render_horizontal_field(form, field, kwargs={}, caller=None) %}
+  {% set has_error = field.errors | length > 0 %}
+  <div class="form-group{{ ' has-error' if has_error else '' }}">
+    <label for="{{ field.id }}" class="col-sm-2 col-lg-3 control-label">
+      {% if field.flags.required %}<span class="text-red">*</span> {% endif %}{{ field.label.text }}
+    </label>
+    <div class="col-sm-10 col-lg-9">
+      {% if field.flags.required %}
+        {% set _dummy = kwargs.setdefault('required', 'required') %}
+      {% endif %}
+      {% if field.type != 'BooleanField' %}
+        {% set _dummy = kwargs.setdefault('class', 'form-control') %}
+      {% else %}
+        {% set _dummy = kwargs.setdefault('data-toggle', 'toggle') %}
+        {% set _dummy = kwargs.setdefault('data-on', 'Activado') %}
+        {% set _dummy = kwargs.setdefault('data-off', 'Desactivado') %}
+      {% endif %}
+      {{ field(**kwargs)|safe }}
+      {% for error in field.errors%}
+        <p class="help-block">{{ error }}</p>
+      {%endfor%}
+
+    </div>
+  </div>
+{% endmacro %}
+
+{% macro render_form_fields(form, form_opts=None, horizontal=False) %}
+    {% if form.hidden_tag is defined %}
+        {{ form.hidden_tag() }}
+    {% else %}
+        {% if csrf_token %}
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        {% endif %}
+        {% for f in form if f.widget.input_type == 'hidden' %}
+            {{ f }}
+        {% endfor %}
+    {% endif %}
+
+    {% if form_opts and form_opts.form_rules %}
+        {% for r in form_opts.form_rules %}
+            {{ r(form, form_opts=form_opts) }}
+        {% endfor %}
+    {% else %}
+        {% for f in form if f.widget.input_type != 'hidden' %}
+          {% if form_opts %}
+            {% set kwargs = form_opts.widget_args.get(f.name, {}) %}
+          {% else %}
+            {% set kwargs = {} %}
+          {% endif %}
+          {% if horizontal%}
+            {{ render_horizontal_field(form, f, kwargs) }}
+          {% else%}
+            {{ render_field(form, f, kwargs) }}
+          {% endif%}
+        {% endfor %}
+    {% endif %}
+{% endmacro %}
+
+{% macro form_tag(form=None, action=None, class="") %}
+    <form action="{{ action or '' }}" method="POST" role="form" class="{{class}}" enctype="multipart/form-data">
+      {{ caller() }}
+    </form>
+{% endmacro %}
+
+{% macro render_form_buttons(cancel_url, extra=None) %}
+    <hr>
+    <div class="form-group">
+      <div class="submit-row">
+        {% if cancel_url %}
+          <a href="{{ cancel_url }}" class="btn btn-danger pull-left" role="button">Cancelar</a>
+        {% endif %}
+        {% if extra %}{{ extra }}{% endif %}
+        <input type="submit" class="btn btn-primary pull-right"value="Guardar" />
+      </div>
+    </div>
+{% endmacro %}
+
+{% macro render_form(form, cancel_url, extra=None, form_opts=None, action=None, horizontal=False) -%}
+    {% call form_tag(action=action, class=('form-horizontal' if horizontal else '') ) %}
+        {{ render_form_fields(form, form_opts=form_opts, horizontal=horizontal) }}
+        {{ render_form_buttons(cancel_url, extra) }}
+    {% endcall %}
+{% endmacro %}
+
+{% macro create_box(title=None, box_extra_class='', minimize_tool=False) %}
+<div class="box {{box_extra_class}}">
+  {% if title%}
+    <div class="box-header with-border">
+      <h2 class="box-title">{{title}}</h2>
+      <div class="box-tools pull-right">
+        {% if minimize_tool %}
+        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+  <div class="box-body">
+    {{ caller() }}
+  </div>
+</div>
+{% endmacro %}

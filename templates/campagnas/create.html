@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+{% import 'form_helper.html' as lib with context %}
+
+
+{%block content%}
+{%call lib.create_box("Crear Mailing", "box-solid")%}
+
+<form method="post" action="/campagnas/create" class="form-horizontal" role="form">
+    <div class="form-group">
+        <label for="event" class="col-sm-2 control-label">Evento a utilizar</label>
+        <div class="col-sm-10">
+            <select name="event_id" id="event_id"  class="form-control input-lg">
+                <option value="-1">Sin envento</option>
+                {% for list in eventList %}
+                    <option value="{{list.event_id}}">{{list.event_name}}</option>
+                {% endfor%}
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="campaignName" class="col-sm-2 control-label">Nombre mailing</label>
+        <div class="col-sm-10">
+            <input type="text" name="campaignName" id="campaignName" maxlength="95" class="form-control">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="emailList" class="col-sm-2 control-label">Área</label>
+        <div class="col-sm-10">
+            <select name="folder"  class="form-control input-lg">
+                <option value="0">Sin área</option>
+                {% for list in areaList %}
+                    <option value="{{list.folder_id}}">{{list.name}}</option>
+                {% endfor%}
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="emailList" class="col-sm-2 control-label">Lista a enviar</label>
+        <div class="col-sm-10">
+            <select name="emailList"  class="form-control input-lg">
+                {% for list in lists %}
+                    <option value="{{list.id}}">{{list.name}}</option>
+                {% endfor%}
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="outgoinEmail" class="col-sm-2 control-label">Email salida</label>
+        <div class="col-sm-10">
+            <input type="text" name="outgoinEmail" value="noresponder@noticiascdt.cl"  class="form-control">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Nombre cuenta salida</label>
+        <div class="col-sm-10">
+            <input type="text" name="outgoinName" placeholder="ej: Noticias, CDT, etc" value="Corporación de Desarrollo Tecnológico"  class="form-control">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Asunto</label>
+        <div class="col-sm-10">
+            <input type="text" name="subject" placeholder="ej: Noticias cdt"  class="form-control" maxlength="145">
+        </div>
+    </div>
+    <textarea name="html" rows="20" style="min-height:250px;">
+    </textarea><br>
+    
+    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal"> 
+        Insertar plantilla
+    </button>
+    <br><br>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+              Etiquetas
+            </a>
+          </h4>
+        </div>
+        <div id="collapseOne" class="panel-collapse collapse">
+            <div class="panel-body">
+                Para personalizar los correos, puedes añadir dentro de tu código las etiquetas que están abajo.
+                <div>
+                    <table class="table">
+                        <tr><th>Etiqueta</th><th>Descripción</th>
+                        </tr>
+                        <tr>
+                            <td>*|EMAIL|*</td><td>Añade el email del destinatario al correo</td>
+                        </tr>
+                        <tr>
+                            <td>*|FNAME|*</td><td>Añade el primer nombre del destinatario al correo</td>
+                        </tr>
+                        <tr>
+                            <td>*|LNAME|*</td><td>Añade el apellido(s) del destinatario al correo</td>
+                        </tr>
+                        <tr>
+                            <td>*|UNSUB|*</td><td>Añade el link para darse de baja de la lista de correo, debe estar para que mailchimp no agregue su footer</td>
+                        </tr>
+                        <tr>
+                            <td>*|REWARDS|*</td><td>Añade un link para mailchimp, debe estar presente para que mailchimp no agregue su footer</td>
+                        </tr>
+                        <tr>
+                            <td>*|FORWARD|*</td><td>Añade un link para enviar el correo a otros amigos</td>
+                        </tr>
+                        <tr>
+                            <td>*|UPDATE_PROFILE|*</td><td>Añade el link para actualizar la información del cliente en la lista de correo</td>
+                        </tr>
+                        <tr>
+                            <td>*|ARCHIVE|*</td><td>Añade el link donde se puede ver el email en la web</td>
+                        </tr>
+                        <tr>
+                            <td>*|EVENT_NAME|*</td><td>Añade el nombre del evento a la publicación</td>
+                        </tr>
+                        <tr>
+                            <td>*|EVENT_DATE|*</td><td>Añade la fecha del evento a la publicación</td>
+                        </tr>
+                        <tr>
+                            <td>*|EVENT_URL|*</td><td>Añade el link al evento de la publicación</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button type="submit" id="create_mailing" class="btn btn-info btn-lg">Crear Mailing</button>
+
+</form>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Insertar plantilla</h4>
+      </div>
+      <div class="modal-body">
+        <select name="template"  class="form-control" id="templateSelect">
+            {% for template in template_lists %}
+                <option value="{{template.id}}">{{template.name}}</option>
+            {% endfor %}
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary" id="insertTemplate">Insertar</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endcall %}
+{% endblock %}
+
+{% block extra_js %}
+<script src="http://cdnjs.cloudflare.com/ajax/libs/ckeditor/4.0.1/ckeditor.js"></script>
+<script>
+    CKEDITOR.replace('html',{
+        "imageBrowser_listUrl": "/files/list/json",
+        'filebrowserUploadUrl': '/files/upload'
+    });
+</script>
+<script>
+    $(function(){
+        $('#event_id').on('change', function() {
+            var newName = $('#event_id :selected').text().substring(0,95);
+            $('#campaignName').val(newName);
+        });
+        $('#insertTemplate').on('click', function() {
+            var id = $("#templateSelect option:selected").val();
+            $.get("/plantillas/source/"+id, function(data){
+                CKEDITOR.instances['html'].insertHtml(data)
+            });
+        });
+        $('form').on("submit", function(){
+            if ( $('form [name="campaignName"]').val().length < 1){
+                console.log($('form [name="campaignName"]').val())
+                swal('Error!',
+                     'Debe especificar un nombre de campaña!',
+                     'error');
+                return false;
+            }else if ( $('form [name="subject"]').val().length < 1){
+                swal('Error!',
+                     'Debe especificar un asunto',
+                     'error');
+                return false;
+            }else if( $('form [name="folder"]').val() == 0){
+                swal('Error!',
+                     'Debe seleccionar una área!',
+                     'error');
+                return false;
+            }
+        })
+    })
+</script>
+{% endblock %}

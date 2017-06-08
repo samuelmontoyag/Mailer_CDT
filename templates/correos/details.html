@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% import 'form_helper.html' as lib with context %}
+
+
+{%block content%}
+{%call lib.create_box("Lista de plantillas eliminadas", "box-primary")%}
+<h2>Detalles lista correos</h2>
+<h3>{{ list.name }}</h3>
+<div>
+    <button class="btn btn-info btn-sm"  data-toggle="modal" data-target="#addEmail">
+      Agregar nuevo correo
+    </button>
+    <button class="btn btn-info btn-sm import_csv">
+      importar correos desde CSV
+    </button>
+</div>
+{% if message != None %}
+   {{message|safe}}
+{% endif %}
+
+<h2>Sublistas de correo</h2>
+<table class="table table-bordered">
+    <tr>
+        <th>Nombre lista</th>
+        <th>Cantidad usuarios</th>
+    </tr>
+    <tr>
+        <td>Todos</td>
+        <td>{{ list.stats.member_count }}</td>
+    </tr>
+    <!-- {% for member in members %}
+    <tr>
+        <td>{{ member.merges['FNAME'] }}</td>
+        <td>{{ member.merges['LNAME'] }}</td>
+    </tr>
+    {% endfor %} -->
+</table>
+
+<div class="modal fade" id="addEmail">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" action="/correos/add">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Agregar nuevo correo</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="id" value="{{list.id}}" >
+                    <div>
+                        <label>Nombres</label>
+                        <div>
+                            <input type="text" name="name" placeholder="Nombres">
+                        </div>
+                    </div>
+                    <div>
+                        <label>Apellidos</label>
+                        <div>
+                            <input type="text" name="lastName" placeholder="apellidos">
+                        </div>
+                    </div>
+                    <div>
+                        <label>Email</label>
+                        <div>
+                            <input type="text" name="email" placeholder="email">
+                        </div>
+                    </div>  
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Agregar</button>
+                </div>
+            </form>
+        </div>
+  </div>
+</div>
+
+
+
+
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="POST" id="confirmDeleteForm" action="/correos/delete">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">Eliminar Mail</h4>
+          </div>
+          <div class="modal-body">
+            esta a punto de eliminar el email <strong id="emailDelText"></strong>.
+            <div class="alert alert-danger">
+                ¿Estas Seguro?.
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="delete">Eliminar todos los datos de este usuario.
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="notify"> notificar de la eliminacion al usuario.
+                </label>
+            </div>
+          </div>
+          <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+            <input type="hidden" name="euid" value="0" id="deleteID">
+            <input type="hidden" name="emailDel" value="0" id="emailDel">
+            <input type="hidden" name="listId" value="{{list.id}}" >
+
+            <button type="submit" id="confirmDelete" class="btn btn-primary">Eliminar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endcall %}
+{% endblock %}
+
+{% block extra_js %}
+
+<script type="text/javascript">
+   $(".import_csv").on('click', function(event){
+      event.preventDefault();
+      swal({
+          title: 'Multiple inputs',
+          html:
+            '<input type="hidden" id="id" name= "id" value="{{list.id}}">' +
+            '<input id="list_name" name="list_name" type="hidden" value="{{list.name}}" >',
+          preConfirm: function () {
+            return new Promise(function (resolve) {
+              resolve([
+                $('#id').val(),
+                $('#list_name').val()
+              ])
+            })
+          },
+          inputValidator: function (file) {
+                return new Promise(function (resolve, reject) {
+                        if (file) {resolve()} 
+                        else {reject('Debes seleccionar un archivo!')}
+                    })
+            }
+        }).then(function (result) {
+          swal(JSON.stringify(result))
+        }).catch(swal.noop)
+    });
+</script>
+
+<script type="text/javascript">
+var euid 
+    $(function(){
+        $(".deleteModal").on("click", function () {
+            euid = $(this).data('id');
+            $("#emailDelText").text($('#'+euid).text());
+            $("#emailDel").val($('#'+euid).text());
+            $('euid').val(euid);
+
+        })
+        $("#confirmDelete").on("click", function () {
+            $("#confirmDelete").text("Eliminando ...");
+            $("#confirmDelete").attr("disabled", "disabled");
+            $("#confirmDeleteForm").submit()
+        });
+    })
+</script>
+{% endblock %}

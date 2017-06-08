@@ -1,0 +1,2 @@
+-En MongoDB ejecutar: db.users.insert({username:'test', password:'test'})
+-Ingresar por URL: http://localhost:5002/auth/login
