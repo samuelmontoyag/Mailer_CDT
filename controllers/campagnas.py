@@ -39,10 +39,11 @@ def index(message=None, folder=None):
 
 
 @campagnas.route("/campagnas/ajax/listar", methods=['GET', 'POST'])
+@campagnas.route("/campagnas/ajax/listar/<pagina>", methods=['GET', 'POST'])
 @login_required
-def ajax_listar_campagnas():
+def ajax_listar_campagnas(pagina=0):
     m = get_mailchimp_api()
-    campaignList = m.campaigns.list()
+    campaignList = m.campaigns.list(start=pagina)
     return json.dumps(campaignList)
 
 
