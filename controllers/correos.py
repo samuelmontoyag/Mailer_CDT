@@ -125,7 +125,6 @@ def delete():
 def import_preview():
     list_id = request.form['id']
     list_name = request.form['list_name']
-    0/0
     csv_file = request.files['emailsFile']
     data = csv_file.read()
     
