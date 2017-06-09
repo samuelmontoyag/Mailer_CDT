@@ -3,23 +3,28 @@
 
 
 {%block content%}
-{%call lib.create_box("Lista de plantillas eliminadas", "box-primary")%}
-<form method="POST" action="/correos/import" id="importForm">
-	
+{%call lib.create_box("Preview de Lista a Importar", "box-primary")%}
+<form method="POST" action="/correos/import" id="importForm">	
 	<h3>{{list_name}}</h3>
 	<h3>Listos para importar <strong id="totalLines">{{totalLines}}</strong> correos</h3>
 
 	<span>En esta vista previa usted debe seleccionar el valor que contendra cada columna.</span>
-	<div class="checkbox">
-		<label >¿la primera fila corresponde a encabezados?</label>
-		<input type="checkbox" name="columnTitle" id="columnTitle"  checked>
-	</div>
+	
+
+	<br> <br>
+	<div class="form-group">
+        <label class="col-sm-4 control-label">¿La primera fila corresponde a encabezados?</label>
+        <div class="col-sm-6">
+            <input type="checkbox" name="columnTitle" class="checkbox_proper checkboxtext_proper" checked id="columnTitle">
+        </div>
+    </div>
+    <br>
 	<table class="table table-bordered" id="emailsPreview">
 		<tr>
 			{% set count = 0 %}
 			{% for row in columnNames %}
 				<th>
-					<select name="headerColumn{{count}}" id="column{{count}}"  class="form-control columnIndex">
+					<select name="headerColumn{{count}}" id="column{{count}}"  class="form-control input-lg columnIndex">
 						<option value="None"></option>
 						<option value="name">Nombre</option>
 						<option value="lastName">Apellidos</option>
