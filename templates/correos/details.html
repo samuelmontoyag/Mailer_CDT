@@ -1,80 +1,137 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% import 'form_helper.html' as lib with context %}
 
+{%block content_wrapper%}
+<section class="content-header">
+  <h1>
+    Detalles de lista de correos
+  </h1>
+</section>
+<section class="content">
+  <div class="row">
+    <div class="col-md-3">
+      <a class='btn btn-lg btn-primary btn-block' data-toggle="modal" data-target="#addEmail">
+        <i class="fa fa-plus" aria-hidden="true"></i>  Agregar nuevo correo 
+      </a>
+      <a class='btn btn-lg btn-warning btn-block' data-toggle="modal" data-target="#importCSV">
+        <i class="fa fa-file-excel-o" aria-hidden="true"></i>  importar desde CSV
+      </a>
+    </div>
+    {% if message != None %}
+        {{message|safe}}
+    {% endif %}
+    <div class="col-md-9">
+      {%call lib.create_box("Lista de Correo: %s" % list.name, "box-primary")%}
+        <h3>Sublistas de correo</h3>
+        <table class="table table-bordered">
+            <tr>
+                <th class="text-center">Nombre lista</th>
+                <th class="text-center">Cantidad usuarios</th>
+            </tr>
+            <tr>
+                <td class="text-center">Todos</td>
+                <td class="text-center">{{ list.stats.member_count }}</td>
+            </tr>
+        </table>
+        <table class="table table-bordered">
+            <tr>
+                <th class="text-center">Nombre</th>
+                <th class="text-center">Apellido</th>
+                <th class="text-center">Email</th>
+            </tr>
+            <tr>
+            {% for member in members %}
+            {%if member.merges['FNAME']  == ''  %}
+                <td class="text-center"> n/d </td>
+            {% else %}
+                <td>{{ member.merges['FNAME'] }}</td>
+            {% endif %}
 
-{%block content%}
-{%call lib.create_box("Lista de plantillas eliminadas", "box-primary")%}
-<h2>Detalles lista correos</h2>
-<h3>{{ list.name }}</h3>
-<div>
-    <button class="btn btn-info btn-sm"  data-toggle="modal" data-target="#addEmail">
-      Agregar nuevo correo
-    </button>
-    <button class="btn btn-info btn-sm import_csv">
-      importar correos desde CSV
-    </button>
-</div>
-{% if message != None %}
-   {{message|safe}}
-{% endif %}
+            {%if member.merges['LNAME']  == ''  %}
+                <td class="text-center"> n/d </td>
+            {% else %}
+                <td>{{ member.merges['LNAME'] }}</td>
+            {% endif %}
 
-<h2>Sublistas de correo</h2>
-<table class="table table-bordered">
-    <tr>
-        <th>Nombre lista</th>
-        <th>Cantidad usuarios</th>
-    </tr>
-    <tr>
-        <td>Todos</td>
-        <td>{{ list.stats.member_count }}</td>
-    </tr>
-    <!-- {% for member in members %}
-    <tr>
-        <td>{{ member.merges['FNAME'] }}</td>
-        <td>{{ member.merges['LNAME'] }}</td>
-    </tr>
-    {% endfor %} -->
-</table>
-
+            {%if member.merges['EMAIL']  == ''  %}
+                <td class="text-center"> n/d </td>
+            {% else %}
+                <td class="text-center">{{ member.merges['EMAIL'] }}</td>
+            {% endif %}
+            </tr>
+            {% endfor %}
+        </table>
+      {{list.event_name}}
+      {%endcall%}
+    </div>
+  </div>
+</section>
 <div class="modal fade" id="addEmail">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form method="POST" action="/correos/add">
+            <form method="post" action="/correos/add" class="form-horizontal" role="form">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4 class="modal-title">Agregar nuevo correo</h4>
                 </div>
+                <input type="hidden" name="id" value="{{list.id}}" >
                 <div class="modal-body">
-                    <input type="hidden" name="id" value="{{list.id}}" >
-                    <div>
-                        <label>Nombres</label>
-                        <div>
-                            <input type="text" name="name" placeholder="Nombres">
+                    <div class="form-group">
+                        <label for="name" class="col-sm-2 control-label">Nombres 
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" name="name" id="name" maxlength="95" class="form-control" placeholder="Nombres">
                         </div>
                     </div>
-                    <div>
-                        <label>Apellidos</label>
-                        <div>
-                            <input type="text" name="lastName" placeholder="apellidos">
+                    <div class="form-group">
+                        <label for="lastName" class="col-sm-2 control-label">Apellidos 
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" name="lastName" id="lastName" maxlength="95" class="form-control" placeholder="Apellidos">
                         </div>
                     </div>
-                    <div>
-                        <label>Email</label>
-                        <div>
-                            <input type="text" name="email" placeholder="email">
+                    <div class="form-group">
+                        <label for="lastName" class="col-sm-2 control-label">Apellidos 
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="email" name="email" id="email" maxlength="95" class="form-control" placeholder="correo@ejemplo.com">
                         </div>
-                    </div>  
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
                     <button type="submit" class="btn btn-primary">Agregar</button>
+                </div>             
+            </form>
+        </div>
+  </div>
+</div>
+<div class="modal fade" id="importCSV">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" action="/correos/import_preview" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Importar desde CSV</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="id" value="{{list.id}}" >
+                    <input type="hidden" name="list_name" value="{{list.name}}" >
+                    <div>
+                        <label>Archivo</label>
+                        <div>
+                            <input type="file" name="emailsFile">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Continuar</button>
                 </div>
             </form>
         </div>
   </div>
 </div>
-
-
 
 
 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -113,54 +170,7 @@
     </div>
   </div>
 </div>
-{% endcall %}
 {% endblock %}
 
-{% block extra_js %}
 
-<script type="text/javascript">
-   $(".import_csv").on('click', function(event){
-      event.preventDefault();
-      swal({
-          title: 'Multiple inputs',
-          html:
-            '<input type="hidden" id="id" name= "id" value="{{list.id}}">' +
-            '<input id="list_name" name="list_name" type="hidden" value="{{list.name}}" >',
-          preConfirm: function () {
-            return new Promise(function (resolve) {
-              resolve([
-                $('#id').val(),
-                $('#list_name').val()
-              ])
-            })
-          },
-          inputValidator: function (file) {
-                return new Promise(function (resolve, reject) {
-                        if (file) {resolve()} 
-                        else {reject('Debes seleccionar un archivo!')}
-                    })
-            }
-        }).then(function (result) {
-          swal(JSON.stringify(result))
-        }).catch(swal.noop)
-    });
-</script>
 
-<script type="text/javascript">
-var euid 
-    $(function(){
-        $(".deleteModal").on("click", function () {
-            euid = $(this).data('id');
-            $("#emailDelText").text($('#'+euid).text());
-            $("#emailDel").val($('#'+euid).text());
-            $('euid').val(euid);
-
-        })
-        $("#confirmDelete").on("click", function () {
-            $("#confirmDelete").text("Eliminando ...");
-            $("#confirmDelete").attr("disabled", "disabled");
-            $("#confirmDeleteForm").submit()
-        });
-    })
-</script>
-{% endblock %}
