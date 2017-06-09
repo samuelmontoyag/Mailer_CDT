@@ -10,6 +10,8 @@
   <link rel="stylesheet" href="/static/css/bootstrap.min.css">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="/static/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/static/css/checkbox.css">
+
   <!-- Ionicons -->
   <link rel="stylesheet" href="/static/css/ionicons.min.css">
   <link rel="stylesheet" href="/static/css/select2.css">
@@ -229,7 +231,10 @@
         $('select').select2();
         $('body').hide().fadeIn(500);
         window.onbeforeunload = function(e) {
-          swal('Cargando Datos')
+          swal({
+              text: 'Cargando Información',
+              allowOutsideClick: false
+          })
           swal.showLoading()
         };
       })
