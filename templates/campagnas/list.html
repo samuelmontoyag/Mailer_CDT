@@ -81,6 +81,8 @@
     <div class="col-md-9">
       {%call lib.create_box("Mailings", "box-primary")%}
         {% if current_folder != None and  current_folder|string != '0' %}
+        <div class="mailing-controls"> </div>        
+
           <div class="btn-group">
             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Opciones <span class="caret"></span></button>
             <ul class="dropdown-menu" role="menu">
@@ -112,6 +114,7 @@
             </tr>
           </tbody>
         </table>
+
       {% endcall %}
     </div>
   </div>
@@ -230,6 +233,27 @@ Modals
   {{/each}}
 </script>
 
+<script id="paginator-template" type="text/x-handlebars-template">
+  <div class="pull-right">
+    Página {{this.page}} de {{this.pages}}
+
+    <div class="btn-group">
+    {{#if this.has_prev}}
+       <button type="button" data-page={{this.prev_num}} class="btn_paginate btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>
+    {{else}}
+       <button type="button"  class="btn btn-dissabled btn-sm"><i class="fa fa-chevron-left"></i></button>
+    {{/if}}
+    {{#if this.has_next}}
+       <button type="button" data-page={{this.next_num}} class="btn_paginate btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>
+    {{else}}
+      <button type="button" class="btn btn-dissabled btn-sm"><i class="fa fa-chevron-right"></i></button>
+    {{/if}}
+    </div>
+    <!-- /.btn-group -->
+  </div>
+</script>
+
+
 <script id="areas-select" type="text/x-handlebars-template">
   {{#each this}}
     <option value="{{folder_id}}">{{name}}</option>
@@ -275,6 +299,10 @@ Modals
     var loading_template =  Handlebars.compile($("#loading-template").html());
     var areas_select =  Handlebars.compile($("#areas-select").html());
 
+    var templatePages = Handlebars.compile($("#paginator-template").html());
+
+    var current_page = 0
+
     $('#sendtime_end, #sendtime_start').datetimepicker({
       viewMode: 'years',
       locale: 'es',
@@ -295,14 +323,13 @@ Modals
         $("#folder_list").html(htmlData);
         var htmlData = areas_select(data);
         $("#folder_id").html(htmlData);
-        console.log(data)
       }
     });
     $.ajax({
       url: "{{url_for('.ajax_listar_campagnas')}}",
       dataType: 'json',
       success: function(data) {
-        // console.log(data)
+        console.log(data)
         var htmlData = mailing_template(data);
         $("#mailing_list").html(htmlData);
       }
@@ -320,11 +347,14 @@ Modals
       $(".areas_filter").removeClass("text-bold");
       $(this).addClass("text-bold");
       $("#mailing_list").html(loading_template());
-      $.post('{{url_for(".ajax_buscar_campagnas")}}',{folder_id: $(this).data('area_id')}, function(data){
+      $.post('{{url_for(".ajax_buscar_campagnas")}}',{
+        folder_id: $(this).data('area_id')}, function(data){
         var htmlData = mailing_template(data);
         $("#mailing_list").html(htmlData);
       }, 'json');
     })
+
+
     $(".search_form").on('submit', function(e){
       e.preventDefault();
       $("#mailing_list").html(loading_template());
