@@ -149,26 +149,7 @@
     <strong>Copyright &copy; 2017 <a href="http://nice.cl">Nice Desarrollo</a>.</strong> Todos los derechos
     reservados.
   </footer>
-  <div class="modal fade" id="pleaseWaitDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-keyboard="false">
-      <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title" id="myModalLabel">Cargando...</h4>
-            </div>
-            <div class="modal-body">
-              <div class="modal-body">
-                <div class="progress progress-striped active">
-                  <div class="bar" style="width: 100%;"></div>
-                </div>
-              </div>
-            </div>
-        </div>
-      </div>
-    </div>
-  <!-- Add the sidebar's background. This div must be placed
-       immediately after the control sidebar -->
-  <div class="control-sidebar-bg"></div>
+  
 </div>
 <!-- ./wrapper -->
 
@@ -185,20 +166,7 @@
 <script src="/static/js/moment.min.js"></script>
 <script src="/static/js/bootstrap-datetimepicker.min.js"></script>
 
-<div class="flash">
-      <script>
-      $(function(){
-        {% for message in get_flashed_messages(category_filter=["error"]) %}
-          $.msgbox( "{{ message }}", {type: "error"});
-        {% endfor %}
-        {% for message in get_flashed_messages(category_filter=["success"]) %}
-          $.msgGrowl({'title': " ", 'type': 'success', 'text': "{{ message }}"});
-        {% endfor %}        
-      });
-      </script>
-</div>
-  
-<!-- AdminLTE App -->
+
 <script src="/static/js/app.min.js"></script>
 <script type="text/javascript">
   $(document).ready(function() {
@@ -229,7 +197,7 @@
 <script type="text/javascript">
       $(function(){
         $('select').select2();
-        $('body').hide().fadeIn(500);
+        $('body').hide().fadeIn(200);
         window.onbeforeunload = function(e) {
           swal({
               text: 'Cargando Información',
