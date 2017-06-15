@@ -341,12 +341,12 @@ def replace_rewards_unsubcribe(html):
     url_unsubcribe = '.com/unsubscribe'
     url_archive = 'campaign-archive'
     for link in soup.findAll('a'):
-        if url_rewards in link.get('href', ''):
-            link.findParent().decompose()
-        if url_unsubcribe in link.get('href', ''):
+        if url_unsubcribe in link.get('href'):
             link['href'] = '*|UNSUB|*'
         if url_archive in link.get('href', ''):
             link['href'] = '*|ARCHIVE|*'
+        if url_rewards in link.get('href'):
+            link.find_parent().decompose()
     return unicode(soup)
 
 
@@ -361,7 +361,7 @@ def set_current_gmt(campaign):
 
 
 def clean_html(html):
-    from BeautifulSoup import BeautifulSoup
+    from bs4 import BeautifulSoup
     html = replace_rewards_unsubcribe(html)
     soup = BeautifulSoup(html)
     mailchimp_datas = soup.findAll('table', {'id': 'canspamBarWrapper'})
