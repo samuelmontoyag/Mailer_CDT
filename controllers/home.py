@@ -26,7 +26,7 @@ def initialize_app(app):
 @home.route("/", methods=['GET', 'POST'])
 @login_required
 def index():
-    return render_template('index.html', title="Bienvenido")
+    return render_template('index.html')
 
 
 @home.route("/statistics", methods=['GET', 'POST'])
