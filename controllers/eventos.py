@@ -26,10 +26,8 @@ def initialize_app(app):
 @eventos.route("/eventos", methods=['GET', 'POST'])
 @login_required
 def index():
-    # users = Table('wp_options', db.metadata, autoload=True)
-    # join = events.join(posts, events.c.post_id == posts.c.ID)
-    # event_list = events.select().select_from(join).execute()
-    event_list = []
+    join = events.join(posts, events.c.post_id == posts.c.ID)
+    event_list = events.select().select_from(join).execute()
     data = {
         'list': event_list
     }
