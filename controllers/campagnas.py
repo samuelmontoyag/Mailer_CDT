@@ -20,6 +20,7 @@ from eventos import get_event_data
 from time import timezone
 from datetime import datetime, timedelta
 import json
+import math
 
 campagnas = Blueprint('campagnas', __name__)
 
@@ -38,18 +39,33 @@ def index(message=None, folder=None):
     return render_template('campagnas/list.html', **data)
 
 
+def paginate_data(data, pagina, folder=0, per_page=25):
+    data['page'] = pagina
+    data['pages'] = math.ceil(data['total'] /per_page)
+    data['per_page'] = per_page
+    if pagina > 0:
+        data['has_previus'] = True
+    if pagina < data['pages']:
+        data['has_next'] = True
+    return data
+
+
+
 @campagnas.route("/campagnas/ajax/listar", methods=['GET', 'POST'])
 @campagnas.route("/campagnas/ajax/listar/<pagina>", methods=['GET', 'POST'])
 @login_required
 def ajax_listar_campagnas(pagina=0):
+    per_page = 25
     m = get_mailchimp_api()
     campaignList = m.campaigns.list(start=pagina)
+    campaignList = paginate_data(campaignList, pagina)
     return json.dumps(campaignList)
 
 
 @campagnas.route("/campagnas/ajax/buscar", methods=['POST'])
 @login_required
-def ajax_buscar_campagnas():
+def ajax_buscar_campagnas(pagina=0):
+    per_page = 25
     filters = {'title': request.form.get('title', ''),
                'exact': False,
                'status': ','.join(request.form.getlist('status')),
@@ -60,6 +76,8 @@ def ajax_buscar_campagnas():
                }
     m = get_mailchimp_api()
     campaignList = m.campaigns.list(filters=filters)
+    campaignList = paginate_data(campaignList, pagina, per_page=per_page)
+
     return json.dumps(campaignList)
 
 
