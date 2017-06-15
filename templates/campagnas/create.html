@@ -3,128 +3,94 @@
 
 
 {%block content%}
-{%call lib.create_box("Crear Mailing", "box-solid")%}
-
-<form method="post" action="/campagnas/create" class="form-horizontal" role="form">
-    <div class="form-group">
-        <label for="event" class="col-sm-2 control-label">Evento a utilizar</label>
-        <div class="col-sm-10">
-            <select name="event_id" id="event_id"  class="form-control input-lg">
-                <option value="-1">Sin envento</option>
-                {% for list in eventList %}
-                    <option value="{{list.event_id}}">{{list.event_name}}</option>
-                {% endfor%}
-            </select>
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="campaignName" class="col-sm-2 control-label">Nombre mailing</label>
-        <div class="col-sm-10">
-            <input type="text" name="campaignName" id="campaignName" maxlength="95" class="form-control">
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="emailList" class="col-sm-2 control-label">Área</label>
-        <div class="col-sm-10">
-            <select name="folder"  class="form-control input-lg">
-                <option value="0">Sin área</option>
-                {% for list in areaList %}
-                    <option value="{{list.folder_id}}">{{list.name}}</option>
-                {% endfor%}
-            </select>
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="emailList" class="col-sm-2 control-label">Lista a enviar</label>
-        <div class="col-sm-10">
-            <select name="emailList"  class="form-control input-lg">
-                {% for list in lists %}
-                    <option value="{{list.id}}">{{list.name}}</option>
-                {% endfor%}
-            </select>
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="outgoinEmail" class="col-sm-2 control-label">Email salida</label>
-        <div class="col-sm-10">
-            <input type="text" name="outgoinEmail" value="noresponder@noticiascdt.cl"  class="form-control">
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="col-sm-2 control-label">Nombre cuenta salida</label>
-        <div class="col-sm-10">
-            <input type="text" name="outgoinName" placeholder="ej: Noticias, CDT, etc" value="Corporación de Desarrollo Tecnológico"  class="form-control">
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="col-sm-2 control-label">Asunto</label>
-        <div class="col-sm-10">
-            <input type="text" name="subject" placeholder="ej: Noticias cdt"  class="form-control" maxlength="145">
-        </div>
-    </div>
-    <textarea name="html" rows="20" style="min-height:250px;">
-    </textarea><br>
-    
-    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal"> 
-        Insertar plantilla
-    </button>
-    <br><br>
-    <div class="panel panel-default">
-        <div class="panel-heading">
-          <h4 class="panel-title">
-            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
-              Etiquetas
-            </a>
-          </h4>
-        </div>
-        <div id="collapseOne" class="panel-collapse collapse">
-            <div class="panel-body">
-                Para personalizar los correos, puedes añadir dentro de tu código las etiquetas que están abajo.
-                <div>
-                    <table class="table">
-                        <tr><th>Etiqueta</th><th>Descripción</th>
-                        </tr>
-                        <tr>
-                            <td>*|EMAIL|*</td><td>Añade el email del destinatario al correo</td>
-                        </tr>
-                        <tr>
-                            <td>*|FNAME|*</td><td>Añade el primer nombre del destinatario al correo</td>
-                        </tr>
-                        <tr>
-                            <td>*|LNAME|*</td><td>Añade el apellido(s) del destinatario al correo</td>
-                        </tr>
-                        <tr>
-                            <td>*|UNSUB|*</td><td>Añade el link para darse de baja de la lista de correo, debe estar para que mailchimp no agregue su footer</td>
-                        </tr>
-                        <tr>
-                            <td>*|REWARDS|*</td><td>Añade un link para mailchimp, debe estar presente para que mailchimp no agregue su footer</td>
-                        </tr>
-                        <tr>
-                            <td>*|FORWARD|*</td><td>Añade un link para enviar el correo a otros amigos</td>
-                        </tr>
-                        <tr>
-                            <td>*|UPDATE_PROFILE|*</td><td>Añade el link para actualizar la información del cliente en la lista de correo</td>
-                        </tr>
-                        <tr>
-                            <td>*|ARCHIVE|*</td><td>Añade el link donde se puede ver el email en la web</td>
-                        </tr>
-                        <tr>
-                            <td>*|EVENT_NAME|*</td><td>Añade el nombre del evento a la publicación</td>
-                        </tr>
-                        <tr>
-                            <td>*|EVENT_DATE|*</td><td>Añade la fecha del evento a la publicación</td>
-                        </tr>
-                        <tr>
-                            <td>*|EVENT_URL|*</td><td>Añade el link al evento de la publicación</td>
-                        </tr>
-                    </table>
+  <h2>Crear Campaña de mailing</h2>
+  
+  {%call lib.create_box("", "box-solid")%}
+        <form method="post" action="/campagnas/create" class="form-horizontal" role="form">
+            <div class="form-group">
+                <label for="campaignName" class="col-sm-2 control-label">Nombre camapaña</label>
+                <div class="col-sm-10">
+                    <input type="text" name="campaignName" id="campaignName" maxlength="95" class="form-control" placeholder="Nombre para la campaña de mailing">
                 </div>
             </div>
-        </div>
-    </div>
-    <button type="submit" id="create_mailing" class="btn btn-warning btn-lg">Crear Mailing</button>
 
-</form>
+            <div class="form-group">
+                <label for="event" class="col-sm-2 control-label">Evento a utilizar</label>
+                <div class="col-sm-10">
+                    <select name="event_id" id="event_id"  class="form-control input-lg">
+                        <option value="-1">Sin envento</option>
+                        {% for list in eventList %}
+                            <option value="{{list.event_id}}">{{list.event_name}}</option>
+                        {% endfor%}
+                    </select>
+                </div>
+            </div>
+            
+
+            <div class="form-group">
+                <label for="emailList" class="col-sm-2 control-label">Área</label>
+                <div class="col-sm-10">
+                    <select name="folder" class="form-control input-lg">
+                        <option value="0">Sin área</option>
+                        {% for list in areaList %}
+                            <option value="{{list.folder_id}}">{{list.name}}</option>
+                        {% endfor%}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="emailList" class="col-sm-2 control-label">Lista a enviar</label>
+                <div class="col-sm-10">
+                    <select name="emailList"  class="form-control">
+                        {% for list in lists %}
+                            <option value="{{list.id}}">{{list.name}}</option>
+                        {% endfor%}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="outgoinEmail" class="col-sm-2 control-label">Email salida</label>
+                <div class="col-sm-10">
+                    <input type="text" name="outgoinEmail" value="noresponder@noticiascdt.cl"  class="form-control">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Nombre cuenta salida</label>
+                <div class="col-sm-10">
+                    <input type="text" name="outgoinName" placeholder="ej: Noticias, CDT, etc" value="Corporación de Desarrollo Tecnológico"  class="form-control">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Asunto</label>
+                <div class="col-sm-10">
+                    <input type="text" name="subject" placeholder="ej: Noticias cdt"  class="form-control" maxlength="145">
+                </div>
+            </div>
+            
+            <textarea name="html" rows="20" style="min-height:250px;"></textarea>
+            
+            <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal"> Insertar plantilla</button>
+            
+            <div class="well well-sm">
+                  <h4 class="no-margin">Etiquetas disponibles</h4>
+                  <small class="text-gray">Para personalizar los correos, puedes añadir dentro de tu código las etiquetas que están abajo.</small>
+                  <dl class="dl-horizontal">
+                      <dt>*|EMAIL|*</dt><dd>Añade el email del destinatario al correo</dd>
+                      <dt>*|FNAME|*</dt><dd>Añade el primer nombre del destinatario al correo</dd>
+                      <dt>*|LNAME|*</dt><dd>Añade el apellido(s) del destinatario al correo</dd>
+                      <dt>*|UNSUB|*</dt><dd>Añade el link para darse de baja de la lista de correo, debe estar para que mailchimp no agregue su footer</dd>
+                      <dt>*|REWARDS|*</dt><dd>Añade un link para mailchimp, debe estar presente para que mailchimp no agregue su footer</dd>
+                      <dt>*|FORWARD|*</dt><dd>Añade un link para enviar el correo a otros amigos</dd>
+                      <dt>*|UPDATE_PROFILE|*</dt><dd>Añade el link para actualizar la información del cliente en la lista de correo</dd>
+                      <dt>*|ARCHIVE|*</dt><dd>Añade el link donde se puede ver el email en la web</dd>
+                      <dt>*|EVENT_NAME|*</dt><dd>Añade el nombre del evento a la publicación</dd>
+                      <dt>*|EVENT_DATE|*</dt><dd>Añade la fecha del evento a la publicación</dd>
+                      <dt>*|EVENT_URL|*</dt><dd>Añade el link al evento de la publicación</dd>
+                  </dl>
+              </div>
+            <button type="submit" id="create_mailing" class="btn btn-warning btn-lg">Crear Mailing</button>
+        </form>
+{% endcall %}
 
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -147,7 +113,6 @@
     </div>
   </div>
 </div>
-{% endcall %}
 {% endblock %}
 
 {% block extra_js %}
