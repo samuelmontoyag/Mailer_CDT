@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% import 'form_helper.html' as lib with context %}
+
+
+{%block content%}
+{%call lib.create_box("Lista de plantillas eliminadas", "box-primary")%}
+<h2>Detalles </h2>
+<h3>{{ list.name }}</h3>
+
+{% if message != None %}
+   {{message|safe}}
+{% endif %}
+<table class="table table-bordered">
+    <tr>
+        <th>Nombres</th>
+        <th>Apellidos</th>
+        <th>Email</th>
+        <th>Inscrito desde</th>
+        <th></th>
+    </tr>
+    {% for member in members %}
+    <tr>
+        <td>{{ member.merges['FNAME'] }}</td>
+        <td>{{ member.merges['LNAME'] }}</td>
+        <td id="{{member.euid}}"><a href="#">{{ member.email }}</a></td>
+        <td>{{ member.timestamp }}</td>
+        <td>
+            <div class="btn-group">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                    Opciones <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li>
+                        <a href="#" data-toggle="modal" data-id="{{member.euid}}" data-target="#deleteModal" class="deleteModal">Eliminar</a>
+                    </li>
+                </ul>
+            </div>          
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endcall %}
+{% endblock %}
+
+{% block extra_js %}
+<script type="text/javascript">
+    $(function(){
+
+    })
+</script>
+{% endblock %}

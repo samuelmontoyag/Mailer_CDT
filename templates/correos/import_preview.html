@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% import 'form_helper.html' as lib with context %}
+
+
+{%block content%}
+{%call lib.create_box("Preview de Lista a Importar", "box-primary")%}
+<form method="POST" action="/correos/import" id="importForm">	
+	<h3>{{list_name}}</h3>
+	<h3>Listos para importar <strong id="totalLines">{{totalLines}}</strong> correos</h3>
+
+	<span>En esta vista previa usted debe seleccionar el valor que contendra cada columna.</span>
+	
+
+	<br> <br>
+	<div class="form-group">
+        <label class="col-sm-4 control-label">¿La primera fila corresponde a encabezados?</label>
+        <div class="col-sm-6">
+            <input type="checkbox" name="columnTitle" class="checkbox_proper checkboxtext_proper" checked id="columnTitle">
+        </div>
+    </div>
+    <br>
+	<table class="table table-bordered" id="emailsPreview">
+		<tr>
+			{% set count = 0 %}
+			{% for row in columnNames %}
+				<th>
+					<select name="headerColumn{{count}}" id="column{{count}}"  class="form-control input-lg columnIndex">
+						<option value="None"></option>
+						<option value="name">Nombre</option>
+						<option value="lastName">Apellidos</option>
+						<option value="email">Email</option>
+					</select>
+				</th>
+				{% set count = count + 1 %}
+			{% endfor %}
+		</tr>
+		<tr>
+			{% for row in columnNames %}
+				<th>{{row}}</th>
+			{% endfor %}
+		</tr>
+		{% for row in emails %}
+		<tr>
+			{% for column in row%}	
+				<td>{{column}}</td>
+			{% endfor%}
+		</tr>
+		{% endfor %}
+	</table>
+	<input type="hidden" name="id" value="{{list_id}}" >
+	<input type="hidden" name="emailsFile" value="{{emailsFile}}" >
+	<button type="submit" class="btn btn-primary">Importar</button>
+</form>
+{% endcall %}
+{% endblock %}
+{% block extra_js %}
+<script>
+	$(function(){
+		$('#columnTitle').change(function() {
+	        if($("#columnTitle").is(":checked"))
+	            $('#totalLines').text(parseInt($('#totalLines').text())-1);
+	       	else
+	        	$('#totalLines').text(parseInt($('#totalLines').text())+1);
+	    });
+	    $("#importForm").submit(function(event){
+	    	valid = false;
+	    	$(".columnIndex option:selected").each(function(i, val){
+	    		if ($(val).val() == "email"){
+	    			valid = true;
+	    			return;
+	    		}
+	    	});
+	    	if (valid)
+	    		return;
+	    	alert("Debe seleccionar al menos un campo de email");
+	    	event.preventDefault();
+	    });
+	})
+</script>
+{% endblock %}
+
