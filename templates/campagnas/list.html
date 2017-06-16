@@ -173,17 +173,21 @@ Modals
 <script src="/static/js/handlebars.js"></script>
 
 
-         
-                
-              
-
 {% raw %}
 <script id="mailing-template" type="text/x-handlebars-template">
  <div class="pull-right">
     Página {{page}} de {{pages}}
     <div class="btn-group" style="margin-left: 10px">
-      <button type="button" {{#unless has_previus}}disabled="disabled" {{/unless}}  class="btn {{#if has_previus}} btn-default {{else}} btn-dissabled {{/if}}btn-sm"><i class="fa fa-chevron-left"></i></button>
-      <button type="button" {{#unless has_next}}disabled="disabled" {{/unless}} class="btn {{#if has_next}} btn-default {{else}} btn-dissabled {{/if}} btn-sm"><i class="fa fa-chevron-right"></i></button>
+      <button id="prev_btn" type="button"
+        {{#unless has_previus}} disabled="disabled" {{/unless}}
+        data-page="{{prev_num}}"
+        class="btn {{#if has_previus}} btn-default {{else}} btn-dissabled {{/if}} btn-sm"><i class="fa fa-chevron-left"></i>
+      </button>
+      <button id="next_btn" type="button"
+        {{#unless has_next}} disabled="disabled" {{/unless}}
+        data-page="{{next_num}}"
+        class="btn {{#if has_next}} btn-default {{else}} btn-dissabled {{/if}} btn-sm"><i class="fa fa-chevron-right"></i>
+      </button>
     </div>
  </div>
  <table class="table table-hover table-striped able table-bordered">
@@ -220,11 +224,9 @@ Modals
             <li>
               <a href="#" data-toggle="modal" data-id="{{id}}" data-target="#cambiarAreaModal" class="cambiarAreaModal">Cambiar área</a>
             </li>
-          
           {{else}}
             <li><a href="/campagnas/clone/{{id}}">Clonar</a></li>
           {{/if_eq}}
-
           <li>
             <a href="#" data-code_id={{id}} class="delete_campaign">Eliminar</a>
           </li>
@@ -264,8 +266,7 @@ Modals
 </script>
 {% endraw %}
 
-  
-
+ 
 <script type="text/javascript">
   Handlebars.registerHelper('if_eq', function(a, b, opts) {
     if (a == b) {
@@ -274,7 +275,6 @@ Modals
         return opts.inverse(this);
     }
   });
-
   
   $(function () {
     var mailing_template =  Handlebars.compile($("#mailing-template").html());
@@ -310,7 +310,6 @@ Modals
       url: "{{url_for('.ajax_listar_campagnas')}}",
       dataType: 'json',
       success: function(data) {
-        console.log(data)
         var htmlData = mailing_template(data);
         $("#mailing_list").html(htmlData);
       }
@@ -330,6 +329,15 @@ Modals
       $("#mailing_list").html(loading_template());
       $.post('{{url_for(".ajax_buscar_campagnas")}}',{
         folder_id: $(this).data('area_id')}, function(data){
+        var htmlData = mailing_template(data);
+        $("#mailing_list").html(htmlData);
+      }, 'json');
+    })
+    $(document).on("click", "#next_btn", function(){
+      $("#mailing_list").html(loading_template());
+      var page = $(this).data("page");
+      var url = "{{url_for('.ajax_listar_campagnas')}}/" + page;
+      $.get(url, function(data){
         var htmlData = mailing_template(data);
         $("#mailing_list").html(htmlData);
       }, 'json');
@@ -381,6 +389,9 @@ Modals
         })
       })
     });
+    $(document).on('click', '.delete_campaign', function( event){
+
+    })
 
     $(document).on('click', '.delete_campaign', function( event){
       event.preventDefault();
@@ -405,7 +416,7 @@ Modals
     $('input').iCheck({
       checkboxClass: 'icheckbox_square-blue',
       radioClass: 'iradio_square-blue',
-      increaseArea: '50%' // optional
+      increaseArea: '50%'
     });
   })
 </script>
