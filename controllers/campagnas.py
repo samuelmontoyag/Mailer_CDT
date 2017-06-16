@@ -330,9 +330,9 @@ def replace_rewards_unsubcribe(html):
     for link in soup.findAll('a'):
         if url_unsubcribe in link.get('href'):
             link['href'] = '*|UNSUB|*'
-        if url_archive in link.get('href', ''):
+        elif (url_archive in link.get('href', '')):
             link['href'] = '*|ARCHIVE|*'
-        if url_rewards in link.get('href'):
+        elif (url_rewards in link.get('href')):
             link.find_parent().decompose()
     return unicode(soup)
 
