@@ -323,6 +323,16 @@ Modals
         $("td#nameAlert").text($(tr).children('td#name').text())
         $("td#areaAlert").text("Área actual: "+$(tr).children('td#area').text())
     })
+    $(document).on("click", ".areas_filter", function(){
+      $(".areas_filter").removeClass("text-bold");
+      $(this).addClass("text-bold");
+      $("#mailing_list").html(loading_template());
+      $.post('{{url_for(".ajax_buscar_campagnas")}}',{
+        folder_id: $(this).data('area_id')}, function(data){
+        var htmlData = mailing_template(data);
+        $("#mailing_list").html(htmlData);
+      }, 'json');
+    })
     $(document).on("click", "#next_btn", function(){
       $("#mailing_list").html(loading_template());
       var page = $(this).data("page");

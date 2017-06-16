@@ -132,9 +132,8 @@ def create():
     except mailchimp.Error, e:
         return "Ha ocurrido un error con mailchimp<br>"+str(e)
     from models import events, posts
-    # join = events.join(posts, events.c.post_id == posts.c.ID)
-    # event_list = events.select().select_from(join).execute()
-    event_list = []
+    join = events.join(posts, events.c.post_id == posts.c.ID)
+    event_list = events.select().select_from(join).execute()
     data = {
         'eventList': event_list,
         'lists': lists['data'],
@@ -260,9 +259,9 @@ def clone(id):
     except mailchimp.Error, e:
         return index("Ha ocurrido un error con mailchimp"+str(e))
     from models import events, posts
-    # join = events.join(posts, events.c.post_id == posts.c.ID)
-    # event_list = events.select().select_from(join).execute()
-    event_list = []
+    join = events.join(posts, events.c.post_id == posts.c.ID)
+    event_list = events.select().select_from(join).execute()
+
     html = replace_rewards_unsubcribe(content['html'])
     details['data'][0]['id'] = None
     data = {
@@ -276,6 +275,7 @@ def clone(id):
     return render_template('campagnas/edit.html',
                            title="Editar campaña",
                            **data)
+
 
 
 @campagnas.route("/campagnas/send", methods=['POST'])
