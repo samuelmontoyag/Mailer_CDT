@@ -41,6 +41,8 @@ def index(message=None, folder=None):
 
 def paginate_data(data, pagina, folder=0, per_page=25):
     data['page'] = pagina
+    data['next_num'] = pagina + 1
+    data['prev_num'] = pagina - 1
     data['pages'] = math.ceil(data['total'] /per_page)
     data['per_page'] = per_page
     if pagina > 0:
@@ -52,7 +54,7 @@ def paginate_data(data, pagina, folder=0, per_page=25):
 
 
 @campagnas.route("/campagnas/ajax/listar", methods=['GET', 'POST'])
-@campagnas.route("/campagnas/ajax/listar/<pagina>", methods=['GET', 'POST'])
+@campagnas.route("/campagnas/ajax/listar/<int:pagina>", methods=['GET', 'POST'])
 @login_required
 def ajax_listar_campagnas(pagina=0):
     per_page = 25
