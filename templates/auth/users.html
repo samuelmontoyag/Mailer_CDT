@@ -21,7 +21,7 @@
         <td>Usuario</td>
         <td>Nombre Usuario</td>
         <td>Rol</td>
-        <td></td>
+        <td class="hidden-xs"></td>
     </thead>
     {% for user in users %}
       {% if user.user_role.lower() != "root" %}
@@ -33,7 +33,7 @@
             <td>
                 <div class="btn-group">
                     <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                      Opciones <span class="caret"></span>
+                     <span class="hidden-xs">Opciones</span> <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu" role="menu">
                       {% if current_user.doc.user_role.lower() == "admin" or  current_user.doc.user_role.lower() == "root" %}

@@ -197,7 +197,7 @@ Modals
   <tr>
     <th align="center">Nombre</th>
     <th style="display:None">fecha creacion</th>
-    <th>Email salida</th>
+    <th class="hidden-xs">Email salida</th>
     <th style="display:None">Asunto salida</th>
     <th>Ultimo envio</th>
     <th>Emails enviados</th>
@@ -208,7 +208,7 @@ Modals
     <tr id="c{{id}}">
     <td id="name"><a href="/campagnas/detalles/{{id}}">{{title}}</a></td>
     <td id="create" style="display:None">{{create_time}}</td>
-    <td>{{from_name}} &lt;{{from_email}}&gt;</td>
+    <td class="hidden-xs">{{from_name}} &lt;{{from_email}}&gt;</td>
     <td style="display:None">{{subject}}</td>
     <td id="lastSend">{{send_time}}</td>
     <td id="emails">{{emails_sent}}</td>
@@ -218,7 +218,7 @@ Modals
     <td>
       <div class="btn-group">
         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-          Opciones <span class="caret"></span>
+         <span class="hidden-xs">Opciones </span>  <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" role="menu">
           <li><a href="/campagnas/detalles/{{id}}">Detalles</a></li>
