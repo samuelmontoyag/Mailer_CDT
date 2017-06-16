@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="content">
+  <div class="row">
+    <div class="col-lg-3 col-xs-6">
+      <div class="small-box bg-aqua-gradient" title="Aqui puedes ver el estado de las campañas de email masivos y generar nuevas campañas">
+        <div class="inner">
+          <h3 id="indicador_mailing"><i class="fa fa-spinner fa-pulse fa-fw"></i></h3>
+          <p>Campañas de Mailing</p>
+        </div>
+        <div class="icon">
+          <i class="fa fa-envelope-o"></i>
+        </div>
+        <a href="{{url_for('campagnas.index')}}" class="small-box-footer">Ver detalles <i class="fa fa-arrow-right"></i></a>
+      </div>
+    </div>
+    <div class="col-lg-3 col-xs-6">
+      <div class="small-box bg-green-gradient" title="Aqui puedes agregar nuevos usuarios a las listas de correo.">
+        <div class="inner">
+          <h3 id="indicador_lista_correos"><i class="fa fa-spinner fa-pulse fa-fw"></i></h3>
+          <p>Listas de Correos</p>
+        </div>
+        <div class="icon">
+          <i class="fa fa fa-th-list"></i>
+        </div>
+        <a href="/correos" class="small-box-footer">Ver detalles <i class="fa fa-arrow-right"></i></a>
+      </div>
+    </div>
+    <div class="col-lg-3 col-xs-6">
+      <div class="small-box bg-red-gradient" title="Aqui puedes ver y editar las plantillas de correo">
+        <div class="inner">
+          <h3 id="indicador_plantillas"><i class="fa fa-spinner fa-pulse fa-fw"></i></h3>
+          <p>Plantillas</p>
+        </div>
+        <div class="icon">
+          <i class="fa fa-file-powerpoint-o"></i>
+        </div>
+        <a href="/plantillas" class="small-box-footer">Ver detalles <i class="fa fa-arrow-right"></i></a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js%}
+<script type="text/javascript">
+  $(function () {
+    $.get('{{url_for(".statistics")}}', function(data){
+      $("#indicador_mailing").text(data['mailing_count']);
+      $("#indicador_plantillas").text(data['template_count']);
+      $("#indicador_lista_correos").text(data['emails_list_count']);
+
+    }, 'json')
+  });
+</script>
+{% endblock %}

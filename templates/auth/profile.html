@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% import 'form_helper.html' as lib with context %}
+
+{% block content %}
+{%call lib.create_box("Mis datos de usuario", "box-primary")%}
+<div class="row">
+  
+  <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+    <h1 class="page-title txt-color-blueDark">
+      <i class="fa-fw fa fa-user"></i>  Mi cuenta</h1>
+  </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12 col-sm-3 center">
+            <span class="profile-picture" style="width:100%;">
+                <img id="avatar" class="editable img-responsive" alt="foo avatar" src="/static/img/male.png" style="width:100%;"/>
+            </span>
+        </div>
+
+        <div class="col-xs-12 col-sm-9">
+            <div class="profile-user-info">
+                <div class="profile-info-row">
+                    <div class="profile-info-name"> Login </div>
+
+                    <div class="profile-info-value">
+                        <span>{{current_user.doc.user_login}}</span>
+                    </div>
+                </div>
+                <div class="profile-info-row">
+                    <div class="profile-info-name"> Usuario </div>
+
+                    <div class="profile-info-value">
+                        <span>{{current_user.doc.user_name}}</span>
+                    </div>
+                </div>
+
+                <div class="profile-info-row">
+                    <div class="profile-info-name"> Ultimo ingreso</div>
+
+                    <div class="profile-info-value">
+                        <span></span>
+                    </div>
+                </div>
+                <div class="profile-info-row">
+                    <div class="profile-info-name"> Rol</div>
+
+                    <div class="profile-info-value">              
+                            <span>{{current_user.doc.user_role}}</span>            
+                    </div>
+                </div>
+            </div>
+
+            <div class="hr hr-8 dotted"></div>
+        </div><!-- /.col -->
+    </div><!-- /.row -->
+
+    <div class="space-80"></div>
+    <br><br>
+
+        <div class="container col-xs-12 col-sm-6 col-lg-4 well well-sm">
+            <div class="widget-box transparent">
+                <div class="widget-header widget-header-small">
+                    <h4 class="widget-title smaller blue no-margin">
+                        <i class=" fa fa-key bigger-110"></i>
+                        Contraseña
+                    </h4>
+                </div>
+                <br>
+                <div class="widget-body">
+                    <div class="widget-main">
+                    	<div class="pull-left">
+                        	<a href="/auth/change_passwd" class="btn btn-primary pull-right">Cambiar contraseña</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+  pageSetUp();
+  var pagefunction = function() {
+    ga('send', 'perfil_usuario', '/perfil_usuario');
+  }
+  pagefunction();
+</script>
+
+{% endcall %}
+{% endblock %}
+
