@@ -129,11 +129,7 @@ def create():
         folderList = m.folders.list("campaign")
     except mailchimp.Error, e:
         return "Ha ocurrido un error con mailchimp<br>"+str(e)
-    from models import events, posts
-    join = events.join(posts, events.c.post_id == posts.c.ID)
-    event_list = events.select().select_from(join).execute()
     data = {
-        'eventList': event_list,
         'lists': lists['data'],
         'template_lists': template_lists['user'],
         'areaList': folderList
@@ -213,28 +209,24 @@ def details(id):
                            **data)
 
 
-@campagnas.route("/campagnas/edit/<id>", methods=['GET'])
+@campagnas.route("/campagnas/edit/<id_>", methods=['GET'])
 @login_required
-def edit(id):
+def edit(id_):
     try:
         m = get_mailchimp_api()
-        details = m.campaigns.list({'campaign_id': id})
-        content = m.campaigns.content(id)
+        details = m.campaigns.list({'campaign_id': id_})
+        content = m.campaigns.content(id_)
         lists = m.lists.list()
         template_lists = m.templates.list()
         folderList = m.folders.list("campaign")
     except mailchimp.Error, e:
         return index("Ha ocurrido un error con mailchimp"+str(e))
-    from models import events, posts
-    join = events.join(posts, events.c.post_id == posts.c.ID)
-    event_list = events.select().select_from(join).execute()
 
     html = (clean_html(content['html']))
 
     data = {
         'campaign': details['data'][0],
         'html': html,
-        'eventList': event_list,
         'lists': lists['data'],
         'template_lists': template_lists['user'],
         'areaList': folderList
@@ -256,16 +248,11 @@ def clone(id):
         folderList = m.folders.list("campaign")
     except mailchimp.Error, e:
         return index("Ha ocurrido un error con mailchimp"+str(e))
-    from models import events, posts
-    join = events.join(posts, events.c.post_id == posts.c.ID)
-    event_list = events.select().select_from(join).execute()
-
     html = replace_rewards_unsubcribe(content['html'])
     details['data'][0]['id'] = None
     data = {
         'campaign': details['data'][0],
         'html': html,
-        'eventList': event_list,
         'lists': lists['data'],
         'template_lists': template_lists['user'],
         'areaList': folderList
@@ -273,8 +260,6 @@ def clone(id):
     return render_template('campagnas/edit.html',
                            title="Editar campaña",
                            **data)
-
-
 
 @campagnas.route("/campagnas/send", methods=['POST'])
 @login_required
