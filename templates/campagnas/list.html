@@ -342,6 +342,15 @@ Modals
         $("#mailing_list").html(htmlData);
       }, 'json');
     })
+    $(document).on("click", "#prev_btn", function(){
+      $("#mailing_list").html(loading_template());
+      var page = $(this).data("page");
+      var url = "{{url_for('.ajax_listar_campagnas')}}/" + page;
+      $.get(url, function(data){
+        var htmlData = mailing_template(data);
+        $("#mailing_list").html(htmlData);
+      }, 'json');
+    })
 
 
     $(".search_form").on('submit', function(e){
@@ -373,6 +382,7 @@ Modals
           })
         }
       }).then(function (result) {
+
         var form = document.createElement("form");
         form.setAttribute("method", "post");
         form.setAttribute("action", '/campagnas/folder/add/');
