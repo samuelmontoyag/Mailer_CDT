@@ -80,29 +80,16 @@
     
     <div class="col-md-9">
       {%call lib.create_box("Mailings", "box-primary")%}
-        {% if current_folder != None and  current_folder|string != '0' %}
-        <div class="mailing-controls"> </div>        
-
-          <div class="btn-group">
-            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Opciones <span class="caret"></span></button>
-            <ul class="dropdown-menu" role="menu">
-              <li>
-                <a href="#" data-toggle="modal" data-target="#deleteAreaModal" class="deleteAreaModal">Eliminar Área</a>
-              </li>
-            </ul>
-          </div>
-        {% endif %}
-        
         <div id="mailing_list">
           <div class="jumbotron text-center">
             <h2 class="text-aqua"><i class="fa fa-cog fa-spin fa-2x fa-fw" aria-hidden="true"></i> Cargando ...</h2>
           </div>
         </div>
         
-      {% endcall %}
     </div>
   </div>
 </section>
+      {% endcall %}
 
 
 
@@ -116,15 +103,15 @@ Modals
       <form method="POST" action="/campagnas/folder/remove/">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title" id="myModalLabel">Eliminar Área</h4>
+          <h4 class="modal-title" id="myModalLabel">Eliminar Area</h4>
         </div>
         <div class="modal-body">
           ¿Seguro que desea eliminar esta Área?
           <input type="hidden" name="id_folder" value="{{current_folder}}">
         </div>
         <div class="modal-footer">
-          <button type="submit" class="btn btn-default" >Seguro</button>
           <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Seguro</button>
         </div>
       </form>
     </div>
@@ -156,8 +143,8 @@ Modals
             <select class="select2" style="width: 100%;" id="folder_id" name="folder_id"></select>
           </div>
           <div class="modal-footer">
-            <button type="submit" class="btn btn-default" >Cambiar</button>
             <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-default" >Cambiar</button>
           </div>
         </form>
     </div>
@@ -257,9 +244,15 @@ Modals
     <a href="#" class="areas_filter text-bold" data-area_id='' id="area_filter0">Todos</a>
   </li>
   {{#each this}}
-    <li>
+    {{#if_eq cnt 0}}
+      <li> 
+        {{name}}<span> ({{cnt}}) <a href="#" data-toggle="modal" data-target="#deleteAreaModal" class="deleteAreaModal" title="Eliminar área"> <i class="fa fa-trash-o" aria-hidden="true"></i> </a>
+      </li> 
+     {{else}}
+    <li>      
       <a href="#" class="areas_filter" data-area_id='{{folder_id}}' id="area_filter{{folder_id}}">{{name}}</a> <span>({{cnt}})</span>
     </li>
+    {{/if_eq}}
   {{/each}}
 </script>
 <script id="loading-template" type="text/x-handlebars-template">
