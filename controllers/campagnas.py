@@ -107,6 +107,20 @@ def changeFolder():
 
     return index(None, details['data']['folder_id'])
 
+@campagnas.route("/campagnas/folder/remove/<area_id>", methods=['POST'])
+@login_required
+def deleteFolder(area_id):
+    area = area_id
+    folderType = "campaign"
+    try:
+        print(area)
+        m = get_mailchimp_api()
+        folder_id = m.folders.delete(area, folderType)
+        print(folder_id)
+    except mailchimp.Error, e:
+        return "Ha ocurrido un error con mailchimp", e
+    return index(None, folder_id)
+
 
 @campagnas.route("/campagnas/folder/add/", methods=['POST'])
 @login_required
@@ -236,6 +250,8 @@ def edit(id_):
     return render_template('campagnas/edit.html',
                            title="Editar campaña",
                            **data)
+
+
 
 
 @campagnas.route("/campagnas/clone/<id>", methods=['GET'])
