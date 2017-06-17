@@ -6,6 +6,7 @@
 <section class="content-header">
   <h1>
     Campañas de mailing
+
   </h1>
 </section>
 <section class="content">
@@ -97,17 +98,17 @@
 *********************************************
 Modals 
 *********************************************-->
-<div class="modal fade" id="deleteAreaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<!-- <div class="modal fade" id="deleteAreaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <form method="POST" action="/campagnas/folder/remove/">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title" id="myModalLabel">Eliminar Area</h4>
+          <h4 class="modal-title" id="myModalLabel">Eliminar Area </h4>
         </div>
         <div class="modal-body">
           ¿Seguro que desea eliminar esta Área?
-          <input type="hidden" name="id_folder" value="{{current_folder}}">
+          <input type="hidden" id="id_folder" name="id_folder" value="{{folder_id}}">
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
@@ -117,7 +118,7 @@ Modals
     </div>
   </div>
 </div>
-
+ -->
 
 <div class="modal fade" id="cambiarAreaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -246,7 +247,7 @@ Modals
   {{#each this}}
     {{#if_eq cnt 0}}
       <li> 
-        {{name}}<span> ({{cnt}}) <a href="#" data-toggle="modal" data-target="#deleteAreaModal" class="deleteAreaModal" title="Eliminar área"> <i class="fa fa-trash-o" aria-hidden="true"></i> </a>
+        {{name}}<span> ({{cnt}}) <a href="#" class="delete_area" data-area_id={{folder_id}} title="Eliminar área"> <i class="fa fa-trash-o" aria-hidden="true"></i> </a>
       </li> 
      {{else}}
     <li>      
@@ -419,6 +420,29 @@ Modals
         });
       })
     });
+
+    $(document).on('click', '.delete_area', function( event){
+      event.preventDefault();
+      var area_id = $(this).data("area_id")
+      swal({
+        title: '¿Estás seguro de Eliminar el Área?',
+        text: 'Una vez borrada, no podras recuperarla.',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Si, Eliminar!',
+        cancelButtonText: 'No, cancelar!',
+        allowOutsideClick: false,
+        reverseButtons: true,
+        buttonsStyling: true
+      }).then(function () {
+        $.post('{{url_for(".deleteFolder", area_id="")}}'+area_id, function(data){
+          swal({type: 'success', html: 'Área eliminada correctamente'})
+          $("#c"+campagna_id).hide(500);
+        });
+      })
+    });
+
+
     $('input').iCheck({
       checkboxClass: 'icheckbox_square-blue',
       radioClass: 'iradio_square-blue',
