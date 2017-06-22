@@ -58,7 +58,9 @@
             <textarea name="html" rows="20" style="min-height:250px;"></textarea>
             
             <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal"> Insertar plantilla</button>
+
             <span style="float:right;">  <i class="fa fa-clock-o" aria-hidden="true"> Guardado hace segundos</i></span>
+            
             <div class="well well-sm">
                   <h4 class="no-margin">Etiquetas disponibles</h4>
                   <small class="text-gray">Para personalizar los correos, puedes añadir dentro de tu código las etiquetas que están abajo.</small>
@@ -104,13 +106,22 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="http://cdnjs.cloudflare.com/ajax/libs/ckeditor/4.0.1/ckeditor.js"></script>
+<script src="/static/js/ckeditor/ckeditor.js"></script>
 <script>
+
     CKEDITOR.replace('html',{
         "imageBrowser_listUrl": "/files/list/json",
-        'filebrowserUploadUrl': '/files/upload'
+        'filebrowserUploadUrl': '/files/upload',
+        'language': 'es'
     });
 </script>
+
+<script>
+  for (var i in CKEDITOR.instances) {
+        CKEDITOR.instances[i].on('change', function() {alert('test 1 2 3')});
+    }
+</script>
+
 <script>
     $(function(){
         $('#event_id').on('change', function() {

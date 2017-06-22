@@ -94,32 +94,6 @@
 
 
 
-<!--  
-*********************************************
-Modals 
-*********************************************-->
-<!-- <div class="modal fade" id="deleteAreaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <form method="POST" action="/campagnas/folder/remove/">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title" id="myModalLabel">Eliminar Area </h4>
-        </div>
-        <div class="modal-body">
-          ¿Seguro que desea eliminar esta Área?
-          <input type="hidden" id="id_folder" name="id_folder" value="{{folder_id}}">
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-          <button type="submit" class="btn btn-primary">Seguro</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
- -->
-
 <div class="modal fade" id="cambiarAreaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -415,8 +389,12 @@ Modals
         buttonsStyling: true
       }).then(function () {
         $.post('{{url_for(".delete", campaign_id="")}}'+campagna_id, function(data){
-          swal({type: 'success', html: 'campaña eliminada correctamente'})
-          $("#c"+campagna_id).hide(500);
+          swal({type: 'success', html: 'campaña eliminada correctamente'}).then(
+            function(){
+              setTimeout(function(){// wait for 5 secs(2)
+                location.reload(); // then reload the page.(3)
+              }, 5000); 
+            })
         });
       })
     });
@@ -437,7 +415,7 @@ Modals
       }).then(function () {
         $.post('{{url_for(".deleteFolder", area_id="")}}'+area_id, function(data){
           swal({type: 'success', html: 'Área eliminada correctamente'})
-          $("#c"+campagna_id).hide(500);
+          $("#c"+area_id).hide(500);
         });
       })
     });
