@@ -3,6 +3,23 @@
 {% block content %}
 <section class="content">
   <div class="row">
+
+    <div class="col-lg-3 col-xs-6">
+      <div class="box box-danger">
+        <div class="box-header with-border">
+          <h3 class="box-title">Uso de disco</h3>
+
+          <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+            </button>
+          </div>
+        </div>
+        <div class="box-body chart-responsive">
+          <div class="chart" id="disk_space" style="height: 160px; position: relative;"></div>
+        </div>
+      </div>
+    </div>
+
     <div class="col-lg-3 col-xs-6">
       <div class="small-box bg-aqua-gradient" title="Aqui puedes ver el estado de las campañas de email masivos y generar nuevas campañas">
         <div class="inner">
@@ -43,8 +60,18 @@
 </section>
 {% endblock %}
 
+{% block extra_css%}
+<link rel="stylesheet" type="text/css" href="/static/plugins/morris/morris.css">
+{% endblock %}
+
 {% block extra_js%}
+<script src="/static/plugins/morris/raphaeljs.min.js"></script>
+<script src="/static/plugins/morris/morris.min.js"></script>
 <script type="text/javascript">
+  function fileSizeToHuman(size) {
+      var e = (Math.log(size) / Math.log(1e3)) | 0;
+      return +(size / Math.pow(1e3, e)).toFixed(2) + ' ' + ('kMGTPEZY'[e - 1] || '') + 'B';
+  }
   $(function () {
     $.get('{{url_for(".statistics")}}', function(data){
       $("#indicador_mailing").text(data['mailing_count']);
@@ -52,6 +79,20 @@
       $("#indicador_lista_correos").text(data['emails_list_count']);
 
     }, 'json')
+
+    $.getJSON( "{{url_for('.disk_usage')}}", function( data ) {
+      var donut = new Morris.Donut({
+        element: 'disk_space',
+        formatter: function (y, data) { return fileSizeToHuman(y) },
+        resize: true,
+        colors: ["#f56954", "#d2d6de"],
+        data: [
+          {label: "Espacio libre", value: data['free_space']},
+          {label: "Espacio ocupado", value: data['used_disk']}
+        ],
+        hideHover: 'auto'
+      });
+    });
   });
 </script>
 {% endblock %}
