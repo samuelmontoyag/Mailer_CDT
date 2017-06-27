@@ -45,6 +45,6 @@ def statistics():
 @login_required
 def disk_usage():
     st = os.statvfs('/')
-    data = {'free_space': (st.f_bavail * st.f_frsize) / 1024,
-            'used_disk': ((st.f_blocks - st.f_bfree) * st.f_frsize) / 1024}
+    data = {'free_space': st.f_bavail * st.f_frsize,
+            'used_disk': (st.f_blocks - st.f_bfree) * st.f_frsize}
     return json.dumps(data)
