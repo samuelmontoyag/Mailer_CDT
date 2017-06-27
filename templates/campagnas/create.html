@@ -104,7 +104,8 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="/static/js/ckeditor/ckeditor.js"></script>
+<!-- <script src="/static/js/ckeditor/ckeditor.js"></script> -->
+<script src="http://cdnjs.cloudflare.com/ajax/libs/ckeditor/4.0.1/ckeditor.js"></script>
 <script>
     CKEDITOR.replace('html',{
         "imageBrowser_listUrl": "/files/list/json",
