@@ -168,15 +168,16 @@ def create2():
         'auto_footer': False,
         'folder_id': request.form['folder']
     }
-    event_id = int(request.form['event_id'])
     content = {
         'html': request.form['html']
     }
-    if (event_id > 0):
-        event_data = get_event_data(event_id)
-        content = {
-            'html': replace_tags(request.form['html'], event_data)
-        }
+    # se quita como ya no existen eventos
+    # event_id = int(request.form['event_id'])
+    # if (event_id > 0):
+    #     event_data = get_event_data(event_id)
+    #     content = {
+    #         'html': replace_tags(request.form['html'], event_data)
+    #     }
     m = get_mailchimp_api()
     try:
         if 'id' in request.form:

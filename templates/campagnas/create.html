@@ -114,10 +114,10 @@
 
 
     $(function(){
-        $('#event_id').on('change', function() {
+        /*$('#event_id').on('change', function() {
             var newName = $('#event_id :selected').text().substring(0,95);
             $('#campaignName').val(newName);
-        });
+        });*/
         $('#insertTemplate').on('click', function() {
             var id = $("#templateSelect option:selected").val();
             $.get("/plantillas/source/"+id, function(data){
