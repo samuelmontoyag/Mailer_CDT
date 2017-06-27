@@ -23,4 +23,4 @@ init_db(app)
 register_blueprints(app)
 
 if __name__ == "__main__":
-    app.run(port=4100)
+    app.run(port=4000)
