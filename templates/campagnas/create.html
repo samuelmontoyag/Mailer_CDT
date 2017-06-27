@@ -117,7 +117,20 @@
 </script>
 
 <script>
-  
+  CKEDITOR.instances['html'].on( 'change', function(e) { 
+    setInterval(function() {
+      $("#saved_text").css("visibility", "visible");
+      $("#mailing_form").submit(function(event) {
+        event.preventDefault();
+        var $form = $(this),
+        url = $form.attr( 'action' );
+        var send_post = $.post( url );
+        posting.done(function( data ) {
+          alert('success');
+        });
+      });
+    },5000); 
+  });
 </script>
 
 
