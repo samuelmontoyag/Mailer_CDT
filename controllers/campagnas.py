@@ -43,14 +43,13 @@ def paginate_data(data, pagina, folder=0, per_page=25):
     data['page'] = pagina
     data['next_num'] = pagina + 1
     data['prev_num'] = pagina - 1
-    data['pages'] = math.ceil(data['total'] /per_page)
+    data['pages'] = math.ceil(data['total'] / per_page)
     data['per_page'] = per_page
     if pagina > 0:
         data['has_previus'] = True
     if pagina < data['pages']:
         data['has_next'] = True
     return data
-
 
 
 @campagnas.route("/campagnas/ajax/listar", methods=['GET', 'POST'])
@@ -93,6 +92,7 @@ def ajax_folder_list():
 def folder(folder=None):
     return index(None, folder)
 
+
 @campagnas.route("/campagnas/folder/setArea", methods=['POST'])
 @login_required
 def changeFolder():
@@ -106,6 +106,7 @@ def changeFolder():
         return "Ha ocurrido un error con mailchimp", e
 
     return index(None, details['data']['folder_id'])
+
 
 @campagnas.route("/campagnas/folder/remove/<area_id>", methods=['POST'])
 @login_required
@@ -253,8 +254,6 @@ def edit(id_):
                            **data)
 
 
-
-
 @campagnas.route("/campagnas/clone/<id>", methods=['GET'])
 @login_required
 def clone(id):
@@ -280,6 +279,7 @@ def clone(id):
                            title="Editar campaña",
                            **data)
 
+
 @campagnas.route("/campagnas/send", methods=['POST'])
 @login_required
 def send():
@@ -288,30 +288,23 @@ def send():
         m = get_mailchimp_api()
         status = m.campaigns.send(id_)
     except mailchimp.Error, e:
-        message = "<div class='alert alert-danger'>"
-        message += "Se encontraron errores con mailchimp "
-        message += str(e)+"</div>"
-        return index(message)
-    return details(id_)
+        flash("Se encontraron errores con mailchimp " + str(e), "error")
+    return redirect(url_for(".details", id=id_))
 
 
 @campagnas.route("/campagnas/sendTest", methods=['POST'])
 @login_required
 def sendTest():
     emails = request.form.getlist('email')
-    campaingId = request.form['campaignId']
+    campaignId = request.form['campaignId']
     try:
         m = get_mailchimp_api()
-        details = m.campaigns.send_test(campaingId, emails)
+        details = m.campaigns.send_test(campaignId, emails)
     except mailchimp.Error, e:
-        message = "<div class='alert alert-danger'>"
-        message += "Se encontraron errores con mailchimp "
-        message += str(e)+"</div>"
-        return index(message)
-    message = "<div class='alert alert-succes'>"
-    message += "pruebas enviadas correctamente"
-    message += "</div>"
-    return index(message)
+        flash("Ha ocurrido un error al conectar con mailchimp", "error")
+        redirect(url_for(".details", id=campaignId))
+    flash("pruebas enviadas correctamente", "success")
+    return redirect(url_for(".details", id=campaignId))
 
 
 @campagnas.route("/campagnas/delete/<campaign_id>", methods=['POST'])
