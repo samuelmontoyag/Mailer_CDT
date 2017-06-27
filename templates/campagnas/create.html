@@ -6,7 +6,7 @@
   <h2>Crear Campaña de mailing</h2>
   
   {%call lib.create_box("", "box-solid")%}
-        <form method="post" action="/campagnas/create" class="form-horizontal" role="form">
+        <form method="post" id="mailing_form" action="/campagnas/create" class="form-horizontal" role="form">
             <div class="form-group">
                 <label for="campaignName" class="col-sm-2 control-label">Nombre camapaña</label>
                 <div class="col-sm-10">
@@ -59,7 +59,7 @@
             
             <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal"> Insertar plantilla</button>
 
-            <span style="float:right;">  <i class="fa fa-clock-o" aria-hidden="true"> Guardado hace segundos</i></span>
+            <span id="saved_text" style="float:right; visibility: hidden;">  <i class="fa fa-clock-o" aria-hidden="true"> Borrador Guardado</i></span>
             
             <div class="well well-sm">
                   <h4 class="no-margin">Etiquetas disponibles</h4>
@@ -117,10 +117,9 @@
 </script>
 
 <script>
-  for (var i in CKEDITOR.instances) {
-        CKEDITOR.instances[i].on('change', function() {alert('test 1 2 3')});
-    }
+  
 </script>
+
 
 <script>
     $(function(){
