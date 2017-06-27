@@ -6,7 +6,7 @@
   <h2>Crear Campaña de mailing</h2>
   
   {%call lib.create_box("", "box-solid")%}
-        <form method="post" id="mailing_form" action="/campagnas/create" class="form-horizontal" role="form">
+        <form method="post" action="/campagnas/create" class="form-horizontal" role="form">
             <div class="form-group">
                 <label for="campaignName" class="col-sm-2 control-label">Nombre camapaña</label>
                 <div class="col-sm-10">
@@ -59,8 +59,6 @@
             
             <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal"> Insertar plantilla</button>
 
-            <span id="saved_text" style="float:right; visibility: hidden;">  <i class="fa fa-clock-o" aria-hidden="true"> Borrador Guardado</i></span>
-            
             <div class="well well-sm">
                   <h4 class="no-margin">Etiquetas disponibles</h4>
                   <small class="text-gray">Para personalizar los correos, puedes añadir dentro de tu código las etiquetas que están abajo.</small>
@@ -108,33 +106,13 @@
 {% block extra_js %}
 <script src="/static/js/ckeditor/ckeditor.js"></script>
 <script>
-
     CKEDITOR.replace('html',{
         "imageBrowser_listUrl": "/files/list/json",
         'filebrowserUploadUrl': '/files/upload',
         'language': 'es'
     });
-</script>
-
-<script>
-  CKEDITOR.instances['html'].on( 'change', function(e) { 
-    setInterval(function() {
-      $("#saved_text").css("visibility", "visible");
-      $("#mailing_form").submit(function(event) {
-        event.preventDefault();
-        var $form = $(this),
-        url = $form.attr( 'action' );
-        var send_post = $.post( url );
-        posting.done(function( data ) {
-          alert('success');
-        });
-      });
-    },5000); 
-  });
-</script>
 
 
-<script>
     $(function(){
         $('#event_id').on('change', function() {
             var newName = $('#event_id :selected').text().substring(0,95);
