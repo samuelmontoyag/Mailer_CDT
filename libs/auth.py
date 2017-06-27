@@ -81,7 +81,7 @@ class User(object):
         user = cls.get_by_username(username)
         password_salt = current_app.config["PASSWORD_SALT"]
 
-        if user: # and user.doc.user_pass == crypt.crypt(password, password_salt):
+        if user and user.doc.user_pass == crypt.crypt(password, password_salt):
             return user
         return None
 
@@ -116,17 +116,15 @@ def login():
                                        request.form['password'])
         if user:
             login_user(user)
-            print current_user.get('user_name'), current_user.is_authenticated()
             flash("Login as, %s" % user.get("user_name"), "success")
             return redirect(request.args.get("next") or url_for("home.index"))
         flash(u'Nombre de usuario y/o contraseña incorrecta.', "error")
-    if current_user.is_authenticated:
+    if current_user.is_authenticated():
         return redirect(url_for("home.index"))
     return render_template('login.html')
 
 
 @auth.route("/auth/logout", methods=['GET', 'POST'])
-@login_required
 def logout():
     logout_user()
     flash(u'Sesion cerrada correctamente.', "success")
