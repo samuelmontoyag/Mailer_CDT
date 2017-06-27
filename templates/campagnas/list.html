@@ -389,12 +389,8 @@
         buttonsStyling: true
       }).then(function () {
         $.post('{{url_for(".delete", campaign_id="")}}'+campagna_id, function(data){
-          swal({type: 'success', html: 'campaña eliminada correctamente'}).then(
-            function(){
-              setTimeout(function(){// wait for 5 secs(2)
-                location.reload(); // then reload the page.(3)
-              }, 5000); 
-            })
+          swal({type: 'success', html: 'campaña eliminada correctamente'});
+          $("#c"+campagna_id).hide(500);
         });
       })
     });
