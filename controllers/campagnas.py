@@ -141,7 +141,7 @@ def addFolder():
 def create():
     try:
         m = get_mailchimp_api()
-        lists = m.lists.list(sort_field='web')
+        lists = m.lists.list(sort_field='web', limit=100)
         template_lists = m.templates.list()
         folderList = m.folders.list("campaign")
     except mailchimp.Error, e:
@@ -234,7 +234,7 @@ def edit(id_):
         m = get_mailchimp_api()
         details = m.campaigns.list({'campaign_id': id_})
         content = m.campaigns.content(id_)
-        lists = m.lists.list()
+        lists = m.lists.list(limit=100)
         template_lists = m.templates.list()
         folderList = m.folders.list("campaign")
     except mailchimp.Error, e:
@@ -261,7 +261,7 @@ def clone(id):
         m = get_mailchimp_api()
         details = m.campaigns.list({'campaign_id': id})
         content = m.campaigns.content(id)
-        lists = m.lists.list()
+        lists = m.lists.list(limit=100)
         template_lists = m.templates.list()
         folderList = m.folders.list("campaign")
     except mailchimp.Error, e:
