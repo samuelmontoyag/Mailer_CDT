@@ -201,16 +201,13 @@ def details(id):
     try:
         m = get_mailchimp_api()
         details = m.campaigns.list({'campaign_id': id})
-        lists = m.lists.list()
+        list_id = details['data'][0].get("list_id", 0)
+        current_list = m.lists.list(filters={'list_id': list_id})
 
     except mailchimp.Error, e:
-        return index("Ha ocurrido un error con mailchimp"+str(e))
+        flash("Ha ocurrido un error: " + str(e), "error")
     campaign = details['data'][0]
-    current_list = None
     set_current_gmt(campaign)
-    for emailList in lists['data']:
-        if campaign["list_id"] == emailList["id"]:
-            current_list = emailList
     if campaign['status'] == "sent":
         campaign['status'] = "Enviado"
     elif campaign['status'] == "save":
@@ -219,8 +216,7 @@ def details(id):
         campaign['status'] = "Enviando"
     data = {
         'campaign': campaign,
-        'lists': lists['data'],
-        'current_list': current_list
+        'current_list': current_list['data'][0]
     }
     return render_template('campagnas/details.html',
                            title="Detalles",
