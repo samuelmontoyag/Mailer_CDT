@@ -176,14 +176,15 @@
           {%if category =="error"%}
             $.smallBox({
                 title: "Se ha producido un error",
-                content : "{{message}}",
+                content : "{{message | replace('\n', '<br/>') | safe}}",
                 color : "#C46A69",
                 timeout: 10000,
                 iconSmall : "fa fa-warning shake animated"
               });
           {%else%}
             $.smallBox({
-                content : "{{message}}",
+                title: "Mensaje:",
+                content : "{{message| replace('\n', '<br/>') | safe}}<br/>",
                 color : "#296191",
                 timeout: 10000,
                 icon : "fa fa-bell fa-small swing animated"

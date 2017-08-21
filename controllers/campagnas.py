@@ -296,10 +296,11 @@ def sendTest():
     try:
         m = get_mailchimp_api()
         details = m.campaigns.send_test(campaignId, emails)
+        flash("pruebas enviadas correctamente", "success")
     except mailchimp.Error, e:
-        flash("Ha ocurrido un error al conectar con mailchimp", "error")
-        redirect(url_for(".details", id=campaignId))
-    flash("pruebas enviadas correctamente", "success")
+        flash("Ha ocurrido un error al conectar con mailchimp:\n" + str(e),
+              "error")
+        return redirect(url_for(".details", id=campaignId))
     return redirect(url_for(".details", id=campaignId))
 
 
